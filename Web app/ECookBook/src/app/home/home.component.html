@@ -1,0 +1,123 @@
+
+<!-- Background Start -->
+<div class="carousel">
+    <div class="container-fluid">
+        <div class="carousel-item">
+            <div class="carousel-img">
+                <img src="../../assets/background.jpg" alt="Image">
+            </div>
+            <div class="carousel-text">
+                <h1 id="header1">Search <span>new</span> recipes</h1>
+                <p id="text1">Search recipes by category and start making these delicious dishes!</p>
+                <div class="carousel-btn register-login">
+                    <a class="btn custom-btn reg-log-btn log-btn" data-toggle="modal" data-target="#login-modal">Login</a>
+                    <a class="btn custom-btn reg-log-btn reg-btn" data-toggle="modal" data-target="#register-modal">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Background End -->
+
+<!-- Login and Register modals start -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="reg-log">
+                <div class="reg-log-form">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="log-modal">Login</h3>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="login-username" placeholder="Username" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="far fa-user"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="login-pass" placeholder="Password" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-key"></i></div>
+                                    </div>
+                                </div>
+                                <div class="errors" id="log-error"></div>
+                            </div>
+                            <div>
+                                <button class="btn custom-btn" id="login-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="reg-log">
+                <div class="reg-log-form">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="reg-modal">Register</h3>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="register-username" placeholder="Username" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="far fa-user"></i></div>
+                                    </div>
+                                </div>
+                                <div class="errors" id="reg-username-error"></div>
+                            </div>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" id="register-email" placeholder="Email" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="far fa-envelope"></i></div>
+                                    </div>
+                                </div>
+                                <div class="errors" id="reg-email-error"></div>
+                            </div>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="register-pass" placeholder="Password" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-key"></i></div>
+                                    </div>
+                                </div>
+                                <div class="errors" id="reg-pass-error"></div>
+                            </div>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="register-conf-pass" placeholder="Confirm password" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-key"></i></div>
+                                    </div>
+                                </div>
+                                <div class="errors" id="reg-conf-pass-error"></div>
+                            </div>
+                            <div>
+                                <button class="btn custom-btn" id="register-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Login and Register modals end  -->

@@ -1,1 +1,60 @@
-/* You can add global styles to this file, and also import other style files */
+/*******************************/
+/********* General CSS *********/
+/*******************************/
+body {
+    color: #757575;
+    background: #ffffff;
+    font-family: 'open sans', sans-serif;
+}
+
+h1,
+h2, 
+h3, 
+h4,
+h5, 
+h6 {
+    color: #454545;
+    font-family: 'Nunito', sans-serif;
+}
+
+a {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    color: #fbaf32;
+    transition: .3s;
+}
+
+a:hover,
+a:active,
+a:focus {
+    color: #719a0a;
+    outline: none;
+    text-decoration: none;
+}
+
+.btn.custom-btn {
+    padding: 12px 25px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #fbaf32;
+    border: 2px solid #fbaf32;
+    border-radius: 5px;
+    transition: .5s;
+}
+
+.btn.custom-btn:hover {
+    color: #fbaf32;
+    background: transparent;
+}
+
+.btn.custom-btn:focus,
+.form-control:focus,
+.custom-select:focus {
+    box-shadow: none;
+}
+
+#log-modal, #reg-modal, .close-modal {
+    color: white;
+}
