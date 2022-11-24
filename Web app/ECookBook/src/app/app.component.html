@@ -11,9 +11,13 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
             <div class="navbar-nav ml-auto">
                 <!-- Navigation -->
-                <a class="nav-item nav-link active" routerLink=''>HOME</a>
-                <a class="nav-item nav-link" routerLink=''>RECIPES</a>
-                <a class="nav-item nav-link" routerLink=''>ABOUT US</a>
+                <a class="nav-item nav-link" routerLinkActive="active" routerLink='/home'>HOME</a>
+                <a class="nav-item nav-link" routerLinkActive="active" routerLink='/recipes'>RECIPES</a>
+                <a class="nav-item nav-link" routerLinkActive="active" *ngIf="loggedUser != null" routerLink='/addRecipe'>ADD RECIPE</a>
+                <a class="nav-item nav-link" routerLinkActive="active" *ngIf="loggedUser != null" routerLink='/profile'>PROFILE</a>
+                <a class="nav-item nav-link" routerLinkActive="active" routerLink='/about'>ABOUT US</a>
+                
+                <button class="btn btn-outline-danger log-out-btn" *ngIf="loggedUser != null" (click)="logout()">LOG OUT</button>
             </div>
         </div>
     </div>
