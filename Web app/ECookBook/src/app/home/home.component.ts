@@ -14,6 +14,10 @@ export class HomeComponent implements OnInit {
 
   username: string;
   password: string;
+
+  email: string;
+  confPassword: string;
+
   errorMsg: string;
   allUsers: User[];
 
@@ -29,13 +33,17 @@ export class HomeComponent implements OnInit {
       this.allUsers = JSON.parse(localStorage.getItem("allUsers")!);
     }    
     this.username = "";
+    this.email = "";
     this.password = "";
+    this.confPassword = "";
     this.errorMsg = "";
   }
 
   reset() {
     this.username = "";
+    this.email = "";
     this.password = "";
+    this.confPassword = "";
     this.errorMsg = "";
   }
 
@@ -54,5 +62,34 @@ export class HomeComponent implements OnInit {
     window.location.reload();
   }
 
+  register() {
+    this.errorMsg = "";
+    if (this.username == "" || this.email == "" || this.password == "" || this.confPassword == "") {
+      this.errorMsg = "Morate popuniti sva polja.";
+      return;
+    }
+    if (this.password != this.confPassword) {
+      this.errorMsg = "Lozinke se razlikuju.";
+      return;
+    }
+    let user = this.allUsers.find(user => user.username == this.username);
+    if (user != null) {
+      this.errorMsg = "Korisnik sa unetim korisnickim imenom vec postoji";
+      return;
+    }
+    user = this.allUsers.find(user => user.email == this.email);
+    if (user != null) {
+      this.errorMsg = "Korisnik sa unetim mejlom vec postoji";
+      return;
+    }
+    let regUser = new User();
+    regUser.email = this.email;
+    regUser.password = this.password;
+    regUser.username = this.username;
+
+    this.allUsers.push(regUser);
+    localStorage.setItem("allUsers", JSON.stringify(this.allUsers));
+    this.errorMsg = "Uspesno ste se registrovali."
+  }
 
 }

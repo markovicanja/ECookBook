@@ -78,7 +78,7 @@
                         <form>
                             <div class="control-group">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="register-username" placeholder="Username" />
+                                    <input type="text" class="form-control"  name="username" [(ngModel)]="username" placeholder="Username" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="far fa-user"></i></div>
                                     </div>
@@ -87,7 +87,7 @@
                             </div>
                             <div class="control-group">
                                 <div class="input-group">
-                                    <input type="email" class="form-control" id="register-email" placeholder="Email" />
+                                    <input type="email" class="form-control" name="email" [(ngModel)]="email" placeholder="Email" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="far fa-envelope"></i></div>
                                     </div>
@@ -96,7 +96,7 @@
                             </div>
                             <div class="control-group">
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="register-pass" placeholder="Password" />
+                                    <input type="password" class="form-control" name="password" [(ngModel)]="password" placeholder="Password" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa fa-key"></i></div>
                                     </div>
@@ -105,15 +105,15 @@
                             </div>
                             <div class="control-group">
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="register-conf-pass" placeholder="Confirm password" />
+                                    <input type="password" class="form-control" name="confPassword" [(ngModel)]="confPassword" placeholder="Confirm password" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa fa-key"></i></div>
                                     </div>
                                 </div>
-                                <div class="errors" id="reg-conf-pass-error"></div>
+                                <div class="errors" id="reg-conf-pass-error">{{ errorMsg }}</div>
                             </div>
                             <div>
-                                <button class="btn custom-btn" type="button">Submit</button>
+                                <button class="btn custom-btn" type="button" (click)="register()">Submit</button>
                             </div>
                         </form>
                     </div>
