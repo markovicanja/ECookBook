@@ -1,0 +1,66 @@
+ <!-- Page Header Start -->
+ <div class="page-header mb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 id="h2-about">Add recipe</h2>
+            </div>
+            <div class="col-12">
+                <a id="breadcrumbs-home" routerLink='/home'>Home</a>
+                <a id="breadcrumbs-about" routerLink='/addRecipe'>Add recipe</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Add Recipe Form Start -->
+<div class="add-recipe">
+    <div class="add-recipe-form">
+        <h3 class="form-label" id="reg-modal">Add recipe:</h3>
+            <form method="post" action="" enctype="multipart/form-data" id="myform">
+                <div class="control-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Name" [(ngModel)]="name" name="Name" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="Difficulty" min="1" max="5" [(ngModel)]="difficulty" name="difficulty"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="input-group">
+                        <label for="" class="form-label" [(ngModel)]="category" name="category">Category:</label>
+                        <select class="form-control recipe-group" id="add-recipe-group">
+                            <option class="select-color" value="breakfast" selected>Breakfast</option>
+                            <option class="select-color" value="dessert">Dessert</option>
+                            <option class="select-color" value="dinner">Dinner</option>
+                            <option class="select-color" value="salad">Salad</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Cuisine" [(ngModel)]="cuisine" name="Cuisine" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Image" [(ngModel)]="img" name="img" />
+                    </div>
+                </div>
+                <label for="" class="form-label" id="add-recipe-instructions-label">Description:</label>
+                <div class="control-group">
+                    <div class="input-group">
+                        <textarea [(ngModel)]="description" name="description" class="form-control" placeholder="" id="add-recipe-instructions"></textarea>
+                    </div>
+                    <div class="errors" id="add-recipe-error-instructions">{{ error }}</div>
+                </div>
+                <div>
+                    <button class="btn custom-btn" type="submit" id="add-recipe">Confirm</button>
+                </div>
+            </form>
+    </div>
+</div>
+<!-- Add Recipe Modal End -->

@@ -1,0 +1,114 @@
+/*******************************/
+/********* Add Recipe CSS *********/
+/*******************************/
+.add-recipe {
+    position: relative;
+    width: 100%;
+    background: #fbaf32;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.add-recipe .add-recipe-content {
+    padding: 45px 0 15px 0;
+}
+
+.add-recipe .add-recipe-content .section-header {
+    margin-bottom: 30px;
+}
+
+.add-recipe .add-recipe-form {
+    padding: 60px 30px;
+    background: #fbaf32;
+    width: 60%;
+}
+
+.select-color {
+    color:#fbaf32;
+}
+
+#choose-file {
+    margin-left: 10px;
+    margin-right: 5px;
+    align-self: center;
+}
+
+
+.add-recipe .add-recipe-form .control-group {
+    margin-bottom: 15px;
+}
+
+.add-recipe .add-recipe-form .input-group-text {
+    position: absolute;
+    padding: 0;
+    border: none;
+    background: none;
+    top: 15px;
+    right: 15px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.add-recipe .add-recipe-form .form-control {
+    height: 45px;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 0 15px;
+    border-radius: 5px !important;
+    border: 1px solid #ffffff;
+    background: transparent;
+}
+
+.add-recipe .add-recipe-form select.form-control {
+    padding: 0 10px;
+}
+
+.add-recipe .add-recipe-form .form-control::placeholder {
+    color: #ffffff;
+    opacity: 1;
+}
+
+.add-recipe .add-recipe-form .form-control:-ms-input-placeholder,
+.add-recipe .add-recipe-form .form-control::-ms-input-placeholder {
+    color: #ffffff;
+}
+
+.add-recipe .add-recipe-form .input-group [data-toggle="datetimepicker"] {
+    cursor: default;
+}
+
+.add-recipe .add-recipe-form .btn.custom-btn {
+    width: 100%;
+    color: #fbaf32;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.add-recipe .add-recipe-form .btn.custom-btn:hover {
+    color: #ffffff;
+    background: transparent;
+}
+
+.duration-hours {
+    margin-left: 20px;
+    margin-right: 15px;
+}
+
+.form-label {
+    align-self: center;
+    color: #fff;
+}
+
+.add-recipe .add-recipe-form #add-recipe-group-label {
+    margin-left: 15px;
+}
+
+.add-recipe .add-recipe-form #add-recipe-group {
+    margin-left: 15px;
+}
+
+#add-recipe-url {
+    margin-right: 15px;
+}
