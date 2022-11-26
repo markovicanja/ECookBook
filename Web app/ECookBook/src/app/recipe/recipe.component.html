@@ -90,8 +90,8 @@
 
                         <button class="btn custom-btn btn-green" (click)="save()" *ngIf="!saved">Save</button>
                         <button class="btn custom-btn" (click)="remove()" *ngIf="saved">Remove</button>
-                        <button class="btn custom-btn btn-green" (click)="recommend()">Recommend</button>
-                        <button class="btn custom-btn btn-green" (click)="visibility()">Change visibility</button>
+                        <button class="btn custom-btn btn-green" data-toggle="modal" data-target="#recommend-modal">Recommend</button>
+                        <button class="btn custom-btn btn-green" data-toggle="modal" data-target="#visibility-modal">Change visibility</button>
 
                     </div>
                 </div>
@@ -100,3 +100,66 @@
     </div>
 </div>
 <!-- Single Post End-->   
+
+<!-- Recommend modal start -->
+<div class="modal fade" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="recommend-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="reg-log">
+                <div class="reg-log-form">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="log-modal">Recommend recipe</h3>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="control-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="username" [(ngModel)]="username" placeholder="Username" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="far fa-user"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn custom-btn" type="button" (click)='recommend()'>Recommend</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Recommend modal end -->
+
+
+<!-- Visibility modal start -->
+<div class="modal fade" id="visibility-modal" tabindex="-1" role="dialog" aria-labelledby="visibility-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="reg-log">
+                <div class="reg-log-form">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="log-modal">Change visibility</h3>
+                        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="control-group">
+                                <button style="margin-top: 2rem" class="btn custom-btn" type="button" (click)='visibility("everyone")'>Visible to everyone</button>
+                                <button style="margin-top: 2rem" class="btn custom-btn" type="button" (click)='visibility("followers")'>Only for followers</button>
+                                <button style="margin-top: 2rem" class="btn custom-btn" type="button" (click)='visibility("hide")'>Hide for everyone</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Visibility modal end -->

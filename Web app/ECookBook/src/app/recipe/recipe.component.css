@@ -485,3 +485,81 @@
 .with-errors {
     margin-bottom: 15px;
 }
+
+
+/*******************************/
+/*** Modal CSS ***/
+/*******************************/
+.reg-log {
+    position: relative;
+    width: 100%;
+    background: rgba(0, 0, 0, .04);
+}
+
+.reg-log .reg-log-content {
+    padding: 45px 0 15px 0;
+}
+
+.reg-log .reg-log-content .section-header {
+    margin-bottom: 30px;
+}
+
+.reg-log .reg-log-form {
+    padding: 60px 30px;
+    background: #fbaf32;
+}
+
+.reg-log .reg-log-form .control-group {
+    margin-bottom: 15px;
+}
+
+.reg-log .reg-log-form .input-group-text {
+    position: absolute;
+    padding: 0;
+    border: none;
+    background: none;
+    top: 15px;
+    right: 15px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.reg-log .reg-log-form .form-control {
+    height: 45px;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 0 15px;
+    border-radius: 5px !important;
+    border: 1px solid #ffffff;
+    background: transparent;
+}
+
+.reg-log .reg-log-form select.form-control {
+    padding: 0 10px;
+}
+
+.reg-log .reg-log-form .form-control::placeholder {
+    color: #ffffff;
+    opacity: 1;
+}
+
+.reg-log .reg-log-form .form-control:-ms-input-placeholder,
+.reg-log .reg-log-form .form-control::-ms-input-placeholder {
+    color: #ffffff;
+}
+
+.reg-log .reg-log-form .input-group [data-toggle="datetimepicker"] {
+    cursor: default;
+}
+
+.reg-log .reg-log-form .btn.custom-btn {
+    width: 100%;
+    color: #fbaf32;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.reg-log .reg-log-form .btn.custom-btn:hover {
+    color: #ffffff;
+    background: transparent;
+}

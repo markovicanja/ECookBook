@@ -16,6 +16,7 @@ export class RecipeComponent implements OnInit {
   recipe: Recipe;
   comments: Comment[];
   saved: boolean;
+  username: String;
 
   ngOnInit(): void {
 
@@ -57,7 +58,8 @@ export class RecipeComponent implements OnInit {
 
   }
 
-  visibility() {
+  // TODO
+  visibility(s: String) {
 
   }
 
