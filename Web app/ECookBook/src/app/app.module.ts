@@ -9,6 +9,7 @@ import { AboutComponent } from './about/about.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { AddRecipeComponent } from './add-recipe/add-recipe.component';
 import { ProfileComponent } from './profile/profile.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ProfileComponent } from './profile/profile.component';
     AboutComponent,
     RecipesComponent,
     AddRecipeComponent,
-    ProfileComponent
+    ProfileComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

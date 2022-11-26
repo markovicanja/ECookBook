@@ -1,0 +1,48 @@
+ <!-- Page Header Start -->
+ <div class="page-header mb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 id="h2-about">Profile</h2>
+            </div>
+            <div class="col-12">
+                <a id="breadcrumbs-home" routerLink='/home'>Home</a>
+                <a id="breadcrumbs-about" routerLink='/userProfile'>{{ user.username }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Menu Start -->
+<div class="menu user-profile-menu">
+    <div class="container">
+        <div class="menu-tab">
+            <ul class="nav nav-pills justify-content-center listing">
+                <li class="nav-item" *ngIf="!following">
+                    <a (click)="follow()" class="nav-link user-profile-link active" data-toggle="pill">FOLLOW</a>
+                </li>
+                <li class="nav-item" *ngIf="following">
+                    <a (click)="unfollow()" class="nav-link user-profile-link" data-toggle="pill">UNFOLLOW</a>
+                </li>
+            </ul>
+            
+            <!--User recipes-->
+            <div class="row" id="user-profile-pics">
+                <div *ngIf="userRecipes.length == 0" id="empty-div">
+                    <p>No recipes to show</p>
+                </div>
+                <div  *ngFor="let recipe of userRecipes" class='col-lg-4 col-md-6 special-grid recipes appetizer'>
+                    <a (click)="recipeRoute(recipe)">
+                        <img src='../../assets/recipes/{{ recipe.img }}_1.jpg' class='img-recipe' alt='Image'>
+                        <p style="color: #719a0a;">
+                            {{ recipe.name }} | Difficulty: {{ recipe.difficulty }} |  Rating: {{ recipe.rating }}
+                        </p>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Menu End -->
