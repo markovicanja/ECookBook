@@ -25,7 +25,8 @@ export class RecipesComponent implements OnInit {
   }
 
   recipeRoute(recipe: Recipe) {
-
+    localStorage.setItem("recipe", JSON.stringify(recipe));
+    this.router.navigate(["recipe"]);
   }
 
   search() {

@@ -17,15 +17,7 @@ export var allRecipes: Recipe[] = [
         Mix together mayonnaise, lemon juice, and pepper in a medium bowl. \
         Toss with chicken, toasted almonds, and celery.",
         author: "anja",
-        rating: 4, 
-        comments: [
-            {
-                author: "nina",
-                date: "25/11/2022",
-                time: "15:04",
-                body: "My go to chicken salad recipe..."
-            }
-        ]
+        rating: 4
     },
     {
         name: "Cookies",
@@ -42,8 +34,7 @@ export var allRecipes: Recipe[] = [
         Bake in the preheated oven until edges are nicely browned, about 10 minutes. \
         Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
         author: "nina",
-        rating: 4, 
-        comments: []
+        rating: 4
     },
     {
         name: "Breakfast muffins",
@@ -62,8 +53,7 @@ export var allRecipes: Recipe[] = [
         into the center of a muffin comes out clean, about 30 minutes. \
         Let cool slightly before serving.",
         author: "ogi",
-        rating: 5, 
-        comments: []
+        rating: 5
     },
     {
         name: "Healthy carbonara",
@@ -86,8 +76,7 @@ export var allRecipes: Recipe[] = [
         Remove pan from heat, squeeze lemon juice over entire dish, \
         and garnish with diced tomatoes.",
         author: "anja",
-        rating: 5, 
-        comments: []
+        rating: 5
     },
     {
         name: "Lava cake",
@@ -117,8 +106,7 @@ export var allRecipes: Recipe[] = [
         Loosen the edges from the ramekin with a knife. Invert each cake onto a plate and \
         dust with powdered sugar.",
         author: "anja",
-        rating: 5, 
-        comments: []
+        rating: 5
     },
     {
         name: "Nutty squares",
@@ -142,8 +130,7 @@ export var allRecipes: Recipe[] = [
         the topping for about 15 minutes. When the topping is cool but not yet hard, cut \
         into squares; return to refrigerator to finish chilling.",
         author: "nina",
-        rating: 5, 
-        comments: []
+        rating: 5
     },
     {
         name: "Oatmeal bars",
@@ -163,8 +150,7 @@ export var allRecipes: Recipe[] = [
         Cover and refrigerate for 2 to 3 hours or overnight. Bring to room temperature \
         before cutting into bars.",
         author: "anja",
-        rating: 3, 
-        comments: []
+        rating: 3
     },
     {
         name: "Pork chops",
@@ -179,8 +165,7 @@ export var allRecipes: Recipe[] = [
         about 7 to 9 minutes per side. An instant-read thermometer inserted into the center \
         should read 145 degrees F (63 degrees C).",
         author: "ogi",
-        rating: 3, 
-        comments: []
+        rating: 3
     },
     {
         name: "Spinach pie",
@@ -206,8 +191,7 @@ export var allRecipes: Recipe[] = [
         Bake in the preheated oven until golden brown, 30 to 40 minutes. \
         Cut into squares and serve while hot.",
         author: "nina",
-        rating: 4, 
-        comments: []
+        rating: 4
     },
     {
         name: "Stew",
@@ -223,8 +207,7 @@ export var allRecipes: Recipe[] = [
         Cover, and cook until beef is tender enough to cut with a spoon, on Low for 8 \
         to 12 hours, or on High for 4 to 6 hours.",
         author: "ogi",
-        rating: 4, 
-        comments: []
+        rating: 4
     },
     {
         name: "Strawberry and banana smoothie",
@@ -236,8 +219,7 @@ export var allRecipes: Recipe[] = [
         blend to combine. Add ice cubes and puree until smooth. \
         Add protein powder and mix until evenly incorporated, about 30 seconds.",
         author: "anja",
-        rating: 5, 
-        comments: []
+        rating: 5
     },
     {
         name: "Watermelon ice pops",
@@ -250,7 +232,6 @@ export var allRecipes: Recipe[] = [
         about 2 hours.\
         Run hot water over ice pop molds for a few seconds to unmold.",
         author: "nina",
-        rating: 3, 
-        comments: []
+        rating: 3
     },
 ]

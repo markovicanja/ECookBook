@@ -58,6 +58,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   recipeRoute(recipe: Recipe) {
-
+    localStorage.setItem("recipe", JSON.stringify(recipe));
+    this.router.navigate(["recipe"]);
   }
 }

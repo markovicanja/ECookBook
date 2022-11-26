@@ -7,10 +7,4 @@ export class Recipe {
     description: string;
     author: string;
     rating: number;
-    comments: [{
-        author: string;
-        date: string;
-        time: string;
-        body: string;
-    }] | [];
 }
