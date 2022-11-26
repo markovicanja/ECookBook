@@ -9,6 +9,28 @@
     margin-bottom: 10px;
 }  
 
+.container-following { 
+    max-width: 600px;
+}
+
+.following {
+    width: 70%;
+    display: flex;
+    border-bottom: #626262;
+    margin: 10px;
+}
+
+.following img {
+    height: 70px;
+    width: 70px;
+    border-radius: 0 !important;
+}
+
+.following p {
+    text-transform: capitalize;
+    margin: 2em;
+}
+
 /*******************************/
 /*********** Menu CSS **********/
 /*******************************/

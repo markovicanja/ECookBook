@@ -79,6 +79,20 @@
             </div>
 
             <!--Following-->
+            <div *ngIf="showed == 'following'" class="container container-following">
+                <div *ngIf="following.length == 0" id="empty-div">
+                    <p>You don't have followings yet</p>
+                </div>
+                <div *ngFor="let f of following">
+                    <div class="my-4">
+                        <div class="d-flex following" style="padding: 0px 150px;" (click)="userRoute(f)">
+                            <img src="../../assets/user.jpg" class='img-recipe'>
+                            <p>{{ f }}</p>
+                        </div>            
+                    </div>
+                    <hr>
+                </div>
+            </div>
 
         </div>
     </div>
