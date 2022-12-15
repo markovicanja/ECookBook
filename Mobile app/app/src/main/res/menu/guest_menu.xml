@@ -10,19 +10,7 @@
         android:id="@+id/recipes_menu_item" />
 
     <item
-        android:title="Add recipe"
-        android:id="@+id/add_recipe_menu_item" />
-
-    <item
-        android:title="Profile"
-        android:id="@+id/profile_menu_item" />
-
-    <item
         android:title="About us"
         android:id="@+id/about_menu_item" />
-
-    <item
-        android:title="Log out"
-        android:id="@+id/logout_menu_item" />
 
 </menu>

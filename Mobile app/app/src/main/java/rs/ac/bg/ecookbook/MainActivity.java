@@ -21,6 +21,7 @@ import rs.ac.bg.ecookbook.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private static boolean logged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
             alert.setView(view);
 
+            AlertDialog dialog = alert.create();
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
             EditText usernameText = view.findViewById(R.id.username_text);
             EditText passwordText = view.findViewById(R.id.password_text);
             Button loginButton = view.findViewById(R.id.login_button);
@@ -45,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
                 // TODO
                 Toast.makeText(this, username + " " + password, Toast.LENGTH_LONG).show();
+                logged = true;
+
+                invalidateOptionsMenu();
+                dialog.dismiss();
             });
 
-            AlertDialog dialog = alert.create();
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.show();
         });
 
@@ -87,26 +93,55 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        if (logged) {
+            inflater.inflate(R.menu.menu, menu);
+        }
+        else {
+            inflater.inflate(R.menu.guest_menu, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.home_menu_item:
-                // TODO
-                return true;
-            case R.id.recipes_menu_item:
-                // TODO
-                // Intent recipesIntent = new Intent(this, RecipesActivity.class);
-                // startActivity(recipesIntent);
-                return true;
-            case R.id.about_menu_item:
-                // TODO
-                // return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (logged) {
+            switch(item.getItemId()){
+                case R.id.home_menu_item:
+                    // TODO
+                    return true;
+                case R.id.recipes_menu_item:
+                    // TODO
+                    // return true;
+                case R.id.add_recipe_menu_item:
+                    // TODO
+                    // return true;
+                case R.id.profile_menu_item:
+                    // TODO
+                    // return true;
+                case R.id.about_menu_item:
+                    // TODO
+                    // return true;
+                case R.id.logout_menu_item:
+                    // TODO
+                    // return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+        else {
+            switch(item.getItemId()){
+                case R.id.home_menu_item:
+                    // TODO
+                    return true;
+                case R.id.recipes_menu_item:
+                    // TODO
+                    // return true;
+                case R.id.about_menu_item:
+                    // TODO
+                    // return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
     }
 }
