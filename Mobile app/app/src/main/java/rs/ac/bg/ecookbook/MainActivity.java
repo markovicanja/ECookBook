@@ -1,13 +1,20 @@
 package rs.ac.bg.ecookbook;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import rs.ac.bg.ecookbook.databinding.ActivityMainBinding;
 
@@ -22,7 +29,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.loginButton.setOnClickListener(v -> {
-            // TODO
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.login_modal, null);
+
+            alert.setView(view);
+
+            EditText usernameText = view.findViewById(R.id.username_text);
+            EditText passwordText = view.findViewById(R.id.password_text);
+            Button loginButton = view.findViewById(R.id.login_button);
+
+            loginButton.setOnClickListener(l -> {
+                String username = usernameText.getText().toString();
+                String password = passwordText.getText().toString();
+
+                // TODO
+                Toast.makeText(this, username + " " + password, Toast.LENGTH_LONG).show();
+            });
+
+            AlertDialog dialog = alert.create();
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.show();
         });
 
         binding.registerButton.setOnClickListener(v -> {
