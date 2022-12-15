@@ -5,7 +5,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +23,15 @@ import rs.ac.bg.ecookbook.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private static boolean logged = false;
+    public SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        sharedPreferences = getSharedPreferences("SP", 0);
 
         binding.loginButton.setOnClickListener(v -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -49,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
                 // TODO
                 Toast.makeText(this, username + " " + password, Toast.LENGTH_LONG).show();
-                logged = true;
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("logged", true);
+                editor.apply();
 
                 invalidateOptionsMenu();
                 dialog.dismiss();
@@ -93,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (logged) {
+        if (sharedPreferences.getBoolean("logged", false)) {
             inflater.inflate(R.menu.menu, menu);
         }
         else {
@@ -104,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (logged) {
+        if (sharedPreferences.getBoolean("logged", false)) {
             switch(item.getItemId()){
                 case R.id.home_menu_item:
-                    // TODO
                     return true;
                 case R.id.recipes_menu_item:
                     // TODO
@@ -119,11 +125,15 @@ public class MainActivity extends AppCompatActivity {
                     // TODO
                     // return true;
                 case R.id.about_menu_item:
-                    // TODO
-                    // return true;
+                    Intent explicitIntent = new Intent(this, AboutUsActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.logout_menu_item:
-                    // TODO
-                    // return true;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("logged", false);
+                    editor.apply();
+                    invalidateOptionsMenu();
+                    return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }
@@ -131,14 +141,14 @@ public class MainActivity extends AppCompatActivity {
         else {
             switch(item.getItemId()){
                 case R.id.home_menu_item:
-                    // TODO
                     return true;
                 case R.id.recipes_menu_item:
                     // TODO
                     // return true;
                 case R.id.about_menu_item:
-                    // TODO
-                    // return true;
+                    Intent explicitIntent = new Intent(this, AboutUsActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }

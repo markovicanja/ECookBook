@@ -37,7 +37,7 @@
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintLeft_toRightOf="@id/logo"
             android:textColor="@color/orange"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="ECookBook"/>
 
