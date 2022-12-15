@@ -53,7 +53,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.registerButton.setOnClickListener(v -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.register_modal, null);
 
+            alert.setView(view);
+
+            EditText usernameText = view.findViewById(R.id.username_text);
+            EditText emailText = view.findViewById(R.id.email_text);
+            EditText passwordText = view.findViewById(R.id.password_text);
+            EditText confirmPasswordText = view.findViewById(R.id.confirm_password_text);
+            Button registerButton = view.findViewById(R.id.register_button);
+
+            registerButton.setOnClickListener(l -> {
+                String username = usernameText.getText().toString();
+                String email = emailText.getText().toString();
+                String password = passwordText.getText().toString();
+                String confirmPassword = confirmPasswordText.getText().toString();
+
+                // TODO
+                Toast.makeText(this,
+                        username + ", " + email + ", " + password + ", " + confirmPassword,
+                        Toast.LENGTH_LONG).show();
+            });
+
+            AlertDialog dialog = alert.create();
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.show();
         });
     }
 
