@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="number_of_recipes">3</integer>
+
+    <string-array name="recipe_name">
+        <item>Chicken salad</item>
+        <item>Cookies</item>
+        <item>Breakfast muffins</item>
+    </string-array>
+
+    <array name="recipe_difficulty">
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+    </array>
+
+    <string-array name="recipe_category">
+        <item>Salad</item>
+        <item>Dessert</item>
+        <item>Breakfast</item>
+    </string-array>
+
+    <string-array name="recipe_cuisine">
+        <item>Chinese</item>
+        <item>American</item>
+        <item>American</item>
+    </string-array>
+
+    <string-array name="recipe_img_1">
+        <item>@drawable/chicken_salad_1</item>
+        <item>@drawable/cookies_1</item>
+        <item>@drawable/breakfast_muffins_1</item>
+    </string-array>
+
+    <string-array name="recipe_img_2">
+        <item>@drawable/chicken_salad_2</item>
+        <item>@drawable/cookies_2</item>
+        <item>@drawable/breakfast_muffins_2</item>
+    </string-array>
+
+    <string-array name="recipe_img_3">
+        <item>@drawable/chicken_salad_3</item>
+        <item>@drawable/cookies_3</item>
+        <item>@drawable/breakfast_muffins_3</item>
+    </string-array>
+
+    <string-array name="recipe_description">
+        <item>This recipe for Basic Chicken Salad uses six simple ingredients and takes only 10 minutes to make from start to finish. After that, you can serve it up on salad greens, scoop it into pita bread or half an avocado, roll it up in a tortilla for a wrap, or serve it hot in a quesadilla or chicken melt. Place almonds in a frying pan. Toast over medium-high heat, shaking frequently. Watch carefully, as they burn easily. Mix together mayonnaise, lemon juice, and pepper in a medium bowl. Toss with chicken, toasted almonds, and celery.</item>
+        <item>Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth. Beat in eggs, one at a time, then stir in vanilla. Dissolve baking soda in hot water. Add to batter along with salt. Stir in flour, chocolate chips, and walnuts. Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets. Bake in the preheated oven until edges are nicely browned, about 10 minutes. Cool on the baking sheets briefly before removing to a wire rack to cool completely.</item>
+        <item>Preheat the oven to 350 degrees F (175 degrees C). Grease a 12-cup muffin tin. Place green onions and bell peppers into a large mixing bowl. Add eggs, bacon, milk, garlic powder, onion powder, salt, and pepper. Sprinkle Cheddar cheese into the bowl and whisk ingredients together until incorporated. Pour mixture equally into the prepared muffin cups. Bake in the preheated oven until a toothpick inserted into the center of a muffin comes out clean, about 30 minutes. Let cool slightly before serving.</item>
+    </string-array>
+
+    <string-array name="recipe_author">
+        <item>anja</item>
+        <item>nina</item>
+        <item>ogi</item>
+    </string-array>
+
+    <array name="recipe_rating">
+        <item>4</item>
+        <item>4</item>
+        <item>5</item>
+    </array>
+
+
+</resources>

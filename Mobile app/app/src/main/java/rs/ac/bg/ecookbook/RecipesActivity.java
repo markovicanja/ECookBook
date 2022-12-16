@@ -17,12 +17,19 @@ public class RecipesActivity extends AppCompatActivity {
 
     private ActivityRecipesBinding binding;
     private SharedPreferences sharedPreferences;
+    private int index;
+    private ArrayList<Recipe> recipes;
+    public int NUMBER_OF_RECIPES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRecipesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        NUMBER_OF_RECIPES = getResources().getInteger(R.integer.number_of_recipes);
+        recipes = getAllRecipes();
+        setContent();
 
         sharedPreferences = getSharedPreferences("SP", 0);
 
@@ -74,11 +81,15 @@ public class RecipesActivity extends AppCompatActivity {
         });
 
         binding.arrowLeft.setOnClickListener(v -> {
-            // TODO
+            if (index == 0) index = recipes.size() - 1;
+            else index--;
+            setContent();
         });
 
         binding.arrowRight.setOnClickListener(v -> {
-            // TODO
+            if (index == recipes.size() - 1) index = 0;
+            else index++;
+            setContent();
         });
 
         binding.recipeImage.setOnClickListener(v -> {
@@ -88,6 +99,23 @@ public class RecipesActivity extends AppCompatActivity {
         binding.recipeDetails.setOnClickListener(v -> {
             // TODO
         });
+    }
+
+    private void setContent() {
+        binding.recipeImage.setImageDrawable(recipes.get(index).getImg1());
+        String recipeDetails = recipes.get(index).getName() + " | Difficulty: "
+                + recipes.get(index).getDifficulty() + " | Rating: "
+                + recipes.get(index).getRating();
+        binding.recipeDetails.setText(recipeDetails);
+    }
+
+    private ArrayList<Recipe> getAllRecipes() {
+        ArrayList<Recipe> recipes = new ArrayList();
+        for (int i = 0; i < NUMBER_OF_RECIPES; i++) {
+            Recipe r = Recipe.createFromResources(getResources(), i);
+            recipes.add(r);
+        }
+        return recipes;
     }
 
     private void resetButtonColors() {
