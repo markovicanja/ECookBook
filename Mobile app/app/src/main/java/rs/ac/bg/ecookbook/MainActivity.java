@@ -111,13 +111,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent explicitIntent;
         if (sharedPreferences.getBoolean("logged", false)) {
             switch(item.getItemId()){
                 case R.id.home_menu_item:
                     return true;
                 case R.id.recipes_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, RecipesActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.add_recipe_menu_item:
                     // TODO
                     // return true;
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO
                     // return true;
                 case R.id.about_menu_item:
-                    Intent explicitIntent = new Intent(this, AboutUsActivity.class);
+                    explicitIntent = new Intent(this, AboutUsActivity.class);
                     startActivity(explicitIntent);
                     return true;
                 case R.id.logout_menu_item:
@@ -143,10 +145,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.home_menu_item:
                     return true;
                 case R.id.recipes_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, RecipesActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.about_menu_item:
-                    Intent explicitIntent = new Intent(this, AboutUsActivity.class);
+                    explicitIntent = new Intent(this, AboutUsActivity.class);
                     startActivity(explicitIntent);
                     return true;
                 default:

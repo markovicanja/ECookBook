@@ -26,6 +26,21 @@ public class AboutUsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sharedPreferences = getSharedPreferences("SP", 0);
+
+        binding.name.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        binding.logo.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        binding.breadcrumb.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
     }
 
     @Override
@@ -43,15 +58,17 @@ public class AboutUsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent explicitIntent;
         if (sharedPreferences.getBoolean("logged", false)) {
             switch(item.getItemId()){
                 case R.id.home_menu_item:
-                    Intent explicitIntent = new Intent(this, MainActivity.class);
+                    explicitIntent = new Intent(this, MainActivity.class);
                     startActivity(explicitIntent);
                     return true;
                 case R.id.recipes_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, RecipesActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.add_recipe_menu_item:
                     // TODO
                     // return true;
@@ -73,12 +90,13 @@ public class AboutUsActivity extends AppCompatActivity {
         else {
             switch(item.getItemId()){
                 case R.id.home_menu_item:
-                    Intent explicitIntent = new Intent(this, MainActivity.class);
+                    explicitIntent = new Intent(this, MainActivity.class);
                     startActivity(explicitIntent);
                     return true;
                 case R.id.recipes_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, RecipesActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.about_menu_item:
                     return true;
                 default:
