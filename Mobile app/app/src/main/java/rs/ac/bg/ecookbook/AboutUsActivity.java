@@ -70,8 +70,9 @@ public class AboutUsActivity extends AppCompatActivity {
                     startActivity(explicitIntent);
                     return true;
                 case R.id.add_recipe_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, AddRecipeActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.profile_menu_item:
                     // TODO
                     // return true;
