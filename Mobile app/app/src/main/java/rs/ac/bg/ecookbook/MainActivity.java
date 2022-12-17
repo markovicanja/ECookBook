@@ -125,8 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(explicitIntent);
                     return true;
                 case R.id.profile_menu_item:
-                    // TODO
-                    // return true;
+                    explicitIntent = new Intent(this, ProfileActivity.class);
+                    startActivity(explicitIntent);
+                    return true;
                 case R.id.about_menu_item:
                     explicitIntent = new Intent(this, AboutUsActivity.class);
                     startActivity(explicitIntent);
