@@ -14,39 +14,28 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import rs.ac.bg.ecookbook.databinding.ActivityAddRecipeBinding;
 import rs.ac.bg.ecookbook.databinding.ActivityProfileBinding;
+import rs.ac.bg.ecookbook.databinding.ActivityUserBinding;
 
-public class ProfileActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity {
 
-    private ActivityProfileBinding binding;
+    private ActivityUserBinding binding;
     private int index;
     private ArrayList<Recipe> recipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityProfileBinding.inflate(getLayoutInflater());
+        binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // TODO
-        String username = "Anja";
+        String username = "Ognjen";
         binding.breadcrumb.setText("HOME / " + username.toUpperCase());
 
+        // TODO
         recipes = getAllRecipes();
         setContent();
-        binding.followingLayout.setVisibility(View.INVISIBLE);
-
-        // TODO
-        ArrayList<User> followingUsers = new ArrayList<>();
-        followingUsers.add(User.createFromResources(getResources(), 2));
-        followingUsers.add(User.createFromResources(getResources(), 1));
-
-        FollowingAdapter followingAdapter = new FollowingAdapter(followingUsers);
-
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setAdapter(followingAdapter);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         binding.name.setOnClickListener(v -> {
             Intent explicitIntent = new Intent(this, MainActivity.class);
@@ -63,36 +52,16 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(explicitIntent);
         });
 
-        binding.myRecipesButton.setOnClickListener(v -> {
+        binding.followButton.setOnClickListener(v -> {
             // TODO
-            resetButtonColors();
-            binding.myRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
-            binding.followingLayout.setVisibility(View.INVISIBLE);
+            binding.followButton.setVisibility(View.INVISIBLE);
+            binding.unfollowButton.setVisibility(View.VISIBLE);
         });
 
-        binding.savedRecipesButton.setOnClickListener(v -> {
+        binding.unfollowButton.setOnClickListener(v -> {
             // TODO
-            resetButtonColors();
-            binding.savedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
-            binding.followingLayout.setVisibility(View.INVISIBLE);
-        });
-
-        binding.recommendedRecipesButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.recommendedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
-            binding.followingLayout.setVisibility(View.INVISIBLE);
-        });
-
-        binding.followingButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.followingButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.INVISIBLE);
-            binding.followingLayout.setVisibility(View.VISIBLE);
+            binding.unfollowButton.setVisibility(View.INVISIBLE);
+            binding.followButton.setVisibility(View.VISIBLE);
         });
 
         binding.arrowLeft.setOnClickListener(v -> {
@@ -137,13 +106,6 @@ public class ProfileActivity extends AppCompatActivity {
         return recipes;
     }
 
-    private void resetButtonColors() {
-        binding.myRecipesButton.setBackgroundColor(getResources().getColor(R.color.orange));
-        binding.savedRecipesButton.setBackgroundColor(getResources().getColor(R.color.orange));
-        binding.recommendedRecipesButton.setBackgroundColor(getResources().getColor(R.color.orange));
-        binding.followingButton.setBackgroundColor(getResources().getColor(R.color.orange));
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -169,6 +131,8 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(explicitIntent);
                 return true;
             case R.id.profile_menu_item:
+                explicitIntent = new Intent(this, ProfileActivity.class);
+                startActivity(explicitIntent);
                 return true;
             case R.id.about_menu_item:
                 explicitIntent = new Intent(this, AboutUsActivity.class);

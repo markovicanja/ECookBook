@@ -14,9 +14,8 @@ import rs.ac.bg.ecookbook.databinding.ViewHolderFollowingBinding;
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.FollowingViewHolder> {
 
     private final List<User> users;
-    private ProfileActivity profileActivity;
 
-    public FollowingAdapter(List<User> users, ProfileActivity profileActivity) {
+    public FollowingAdapter(List<User> users) {
         this.users = users;
     }
 
@@ -53,10 +52,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
             this.binding = binding;
 
             binding.username.setOnClickListener(v -> {
-                // TODO
-
-//                Intent explicitIntent = new Intent(profileActivity, UserActivity.class);
-//                profileActivity.startActivity(explicitIntent);
+                Intent intent = new Intent(v.getContext(), UserActivity.class);
+                v.getContext().startActivity(intent);
             });
         }
     }
