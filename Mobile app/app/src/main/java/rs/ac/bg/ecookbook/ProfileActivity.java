@@ -2,6 +2,7 @@ package rs.ac.bg.ecookbook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -28,11 +30,23 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // TODO
-        String username = "Nina";
+        String username = "Anja";
         binding.breadcrumb.setText("HOME / " + username.toUpperCase());
 
         recipes = getAllRecipes();
         setContent();
+        binding.followingLayout.setVisibility(View.INVISIBLE);
+
+        // TODO
+        ArrayList<User> followingUsers = new ArrayList<>();
+        followingUsers.add(User.createFromResources(getResources(), 2));
+        followingUsers.add(User.createFromResources(getResources(), 1));
+
+        FollowingAdapter followingAdapter = new FollowingAdapter(followingUsers, this);
+
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setAdapter(followingAdapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         binding.name.setOnClickListener(v -> {
             Intent explicitIntent = new Intent(this, MainActivity.class);
@@ -53,24 +67,32 @@ public class ProfileActivity extends AppCompatActivity {
             // TODO
             resetButtonColors();
             binding.myRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
+            binding.recipesLayout.setVisibility(View.VISIBLE);
+            binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
         binding.savedRecipesButton.setOnClickListener(v -> {
             // TODO
             resetButtonColors();
             binding.savedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
+            binding.recipesLayout.setVisibility(View.VISIBLE);
+            binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
         binding.recommendedRecipesButton.setOnClickListener(v -> {
             // TODO
             resetButtonColors();
             binding.recommendedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
+            binding.recipesLayout.setVisibility(View.VISIBLE);
+            binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
         binding.followingButton.setOnClickListener(v -> {
             // TODO
             resetButtonColors();
             binding.followingButton.setBackgroundColor(getResources().getColor(R.color.green));
+            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.followingLayout.setVisibility(View.VISIBLE);
         });
 
         binding.arrowLeft.setOnClickListener(v -> {

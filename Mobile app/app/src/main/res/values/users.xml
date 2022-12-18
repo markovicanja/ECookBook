@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="number_of_users">3</integer>
+
+    <string-array name="usernames">
+        <item>anja</item>
+        <item>nina</item>
+        <item>ogi</item>
+    </string-array>
+
+    <string-array name="emails">
+        <item>anja@gmail.com</item>
+        <item>nina@gmail.com</item>
+        <item>ogi@gmail.com</item>
+    </string-array>
+
+    <string-array name="passswords">
+        <item>123</item>
+        <item>123</item>
+        <item>123</item>
+    </string-array>
+
+</resources>
