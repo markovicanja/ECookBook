@@ -77,11 +77,15 @@ public class UserActivity extends AppCompatActivity {
         });
 
         binding.recipeImage.setOnClickListener(v -> {
-            // TODO
+            // TODO proslediti recept
+            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
+            startActivity(explicitIntent);
         });
 
         binding.recipeDetails.setOnClickListener(v -> {
-            // TODO
+            // TODO proslediti recept
+            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
+            startActivity(explicitIntent);
         });
 
     }
