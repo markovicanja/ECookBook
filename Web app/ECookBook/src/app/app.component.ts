@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './model/user.model';
+import { ServiceService } from './service.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import { User } from './model/user.model';
 export class AppComponent {
   title = 'ECookBook';
 
-  constructor(private router: Router) {
+  constructor(private service: ServiceService, private router: Router) {
   }
 
   sessionValid: boolean;

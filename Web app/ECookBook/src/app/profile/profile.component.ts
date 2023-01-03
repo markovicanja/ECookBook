@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { followings } from '../data/following';
 import { allRecipes } from '../data/recipes';
-import { allUsers } from '../data/users';
 import { Following } from '../model/following.model';
 import { Recipe } from '../model/recipe.model';
 import { User } from '../model/user.model';
+import { ServiceService } from '../service.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +14,7 @@ import { User } from '../model/user.model';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private service: ServiceService, private router: Router) { }
 
   user: User;
   userRecipes: Recipe[];
@@ -70,18 +70,12 @@ export class ProfileComponent implements OnInit {
   }
 
   userRoute(username: String) {
-    let user: User | undefined;
-    let users: User[];
-    if (localStorage.getItem("allUsers") == "" || localStorage.getItem("allUsers") == null) {
-      users = allUsers;
-      localStorage.setItem("allUsers", JSON.stringify(users)); 
-    }
-    else {
-      users = JSON.parse(localStorage.getItem("allUsers")!);
-    } 
-    user = users.find(u => u.username == username);
-    localStorage.setItem("userProfile", JSON.stringify(user))
-    this.router.navigate(["userProfile"]);
+    this.service.findUser(username.toString()).subscribe(res => {
+      if(res["status"] == 1){
+        localStorage.setItem("userProfile", JSON.stringify({'username' : res["username"], 'email' : res["email"]}))
+        this.router.navigate(["userProfile"]);
+      }
+    })
   }
 
 }
