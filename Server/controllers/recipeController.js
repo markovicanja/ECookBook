@@ -20,6 +20,34 @@ class RecipeController{
                 }
             });
         });
+
+        router.route('/addRecipe').post((req, res) => {
+            let name = req.body.name;
+            let difficulty = req.body.difficulty;
+            let category = req.body.category;
+            let cuisine = req.body.cuisine;
+            let img = req.body.img;
+            let description = req.body.description;
+            let author = req.body.author;
+            let rating = req.body.rating;
+            
+            recipe.find({ 'name' : name }, (err, recipes) => {
+                if (recipes.length == 0){
+                    recipe.collection.insertOne({
+                        'name' : name,
+                        'difficulty': difficulty,
+                        'category' : category,
+                        'cuisine' : cuisine,
+                        'img': img,
+                        'description' : description,
+                        'author' : author,
+                        'rating' : rating
+                    });
+                    res.json({status: 1, poruka: "Uspesno ste uneli recept."});
+                }
+                else res.json({status: 0, poruka: "Recept vec postoji u sistemu."});
+            });
+        });
     }
 
     defaultRecords(){

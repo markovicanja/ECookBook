@@ -31,12 +31,9 @@
                 </div>
                 <div class="control-group">
                     <div class="input-group">
-                        <label for="" class="form-label" [(ngModel)]="category" name="category">Category:</label>
-                        <select class="form-control recipe-group" id="add-recipe-group">
-                            <option class="select-color" value="breakfast" selected>Breakfast</option>
-                            <option class="select-color" value="dessert">Dessert</option>
-                            <option class="select-color" value="dinner">Dinner</option>
-                            <option class="select-color" value="salad">Salad</option>
+                        <label class="form-label">Category:</label>
+                        <select class="form-control recipe-group" id="add-recipe-group" [(ngModel)]="category" name="category">
+                            <option *ngFor="let ctg of categories" [ngValue]="ctg" class="select-color">{{ctg}}</option>
                         </select>
                     </div>
                 </div>
@@ -58,7 +55,7 @@
                     <div class="errors" id="add-recipe-error-instructions">{{ error }}</div>
                 </div>
                 <div>
-                    <button class="btn custom-btn" type="submit" id="add-recipe">Confirm</button>
+                    <button class="btn custom-btn" type="submit" id="add-recipe" (click)='submit()'>Confirm</button>
                 </div>
             </form>
     </div>

@@ -65,6 +65,21 @@ export class ServiceService {
     return this.http.post<keyable>(`${this.uri}/getUserRecipes`, data);
   }
 
+  // ADD NEW RECIPE
+  addRecipe(name: string, difficulty: number, category: string, cuisine: string, img: string, description: string, author: string, rating: number) {
+    const data = {
+      name: name,
+      difficulty: difficulty,
+      category: category,
+      cuisine: cuisine,
+      img: img,
+      description: description,
+      author: author,
+      rating: rating
+    }
+    return this.http.post<keyable>(`${this.uri}/addRecipe`, data);
+  }
+
   // GET ALL PEOPLE THE GIVEN USER IS FOLLOWING
   getFollowings(username: string) {
     const data = {
