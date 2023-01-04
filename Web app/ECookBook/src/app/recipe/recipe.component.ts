@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { comments } from '../data/comments';
 import { Comment } from '../model/comment.model';
 import { Recipe } from '../model/recipe.model';
+import { ServiceService } from '../service.service';
 
 @Component({
   selector: 'app-recipe',
@@ -11,7 +11,7 @@ import { Recipe } from '../model/recipe.model';
 })
 export class RecipeComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private service: ServiceService, private router: Router) { }
 
   recipe: Recipe;
   comments: Comment[];
@@ -28,19 +28,11 @@ export class RecipeComponent implements OnInit {
     }
     else this.recipe = JSON.parse(localStorage.getItem("recipe")!);
 
-    let allComments: Comment[];
-    if (localStorage.getItem("allComments") == "" || localStorage.getItem("allComments") == null) {
-      allComments = comments;
-      localStorage.setItem("allComments", JSON.stringify(allComments)); 
-    }
-    else {
-      allComments = JSON.parse(localStorage.getItem("allComments")!);
-    }
-
-    this.comments = [];
-    allComments.forEach(comment => {
-      if (comment.recipe == this.recipe.name) this.comments.push(comment);
-    })
+    this.service.getComments(this.recipe.name).subscribe(res => {
+      if(res["status"] == 1){
+        this.comments = (res["poruka"] as Comment[]);
+      }
+    });
   }
 
   // TODO

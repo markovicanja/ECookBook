@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from './model/user.model';
-import { Recipe } from './model/recipe.model';
 
 export interface keyable {
   [key: string]: any  
@@ -68,6 +67,14 @@ export class ServiceService {
       username: username
     }
     return this.http.post<keyable>(`${this.uri}/getFollowings`, data);
+  }
+
+  // GET ALL COMMENTS FOR A RECIPE
+  getComments(recipe: string) {
+    const data = {
+      recipe: recipe
+    }
+    return this.http.post<keyable>(`${this.uri}/getComments`, data);
   }
 
 }

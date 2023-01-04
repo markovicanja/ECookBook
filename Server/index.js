@@ -111,6 +111,19 @@ router.route('/getFollowings').post((req, res) => {
     });
 });
 
+// Comment methodes
+router.route('/getComments').post((req, res) => {
+    let recipe = req.body.recipe;
+    
+    comment.find({'recipe' : recipe}, (err, comments) => {
+        if (err) res.json({status: 0, poruka: err});
+        else{
+            if(comments.length != 0) res.json({status: 1, poruka: comments});
+            else res.json({status: 0, poruka: "error"});
+        }
+    });
+});
+
 defaultRecords(user, following, comment, recipe);
 
 app.use('/', router)

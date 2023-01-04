@@ -242,6 +242,29 @@ const initDefaultRecords = (user, following, comment, recipe) => {
     following.collection.deleteMany();
     following.collection.insertOne({ username: "anja", following: "ogi" });
     following.collection.insertOne({ username: "anja", following: "nina" });
+    
+    comment.collection.deleteMany();
+    comment.collection.insertOne({
+        recipe: "Cookies", 
+        author: "ogi",
+        date: "26/11/2022",
+        time: "19:14",
+        body: "My go to cookie recipe"
+    });
+    comment.collection.insertOne({
+        recipe: "Cookies", 
+        author: "nina",
+        date: "2/11/2022",
+        time: "11:14",
+        body: "Love this recipe"
+    });
+    comment.collection.insertOne({
+        recipe: "Chicken salad", 
+        author: "ogi",
+        date: "6/10/2022",
+        time: "12:21",
+        body: "Perfect summer salad!"
+    });
 }
 
 module.exports = initDefaultRecords;
