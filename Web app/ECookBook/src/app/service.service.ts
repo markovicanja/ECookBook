@@ -66,7 +66,7 @@ export class ServiceService {
   }
 
   // ADD NEW RECIPE
-  addRecipe(name: string, difficulty: number, category: string, cuisine: string, img: string, description: string, author: string, rating: number) {
+  addRecipe(name: string, difficulty: number, category: string, cuisine: string, img: string, description: string, author: string, visibility: number, rating: number) {
     const data = {
       name: name,
       difficulty: difficulty,
@@ -75,6 +75,7 @@ export class ServiceService {
       img: img,
       description: description,
       author: author,
+      visibility: visibility,
       rating: rating
     }
     return this.http.post<keyable>(`${this.uri}/addRecipe`, data);
@@ -86,6 +87,33 @@ export class ServiceService {
       username: username
     }
     return this.http.post<keyable>(`${this.uri}/getFollowings`, data);
+  }
+
+  // GET 1/0 IF THE GIVEN USER IS FOLLOWING THE QUERIED
+  getIsFollowing(username: string, following: string) {
+    const data = {
+      username: username,
+      following: following
+    }
+    return this.http.post<keyable>(`${this.uri}/getIsFollowing`, data);
+  }
+
+  // SET THE GIVEN USER TO FOLLOW THE SELECTED
+  setIsFollowing(username: string, following: string) {
+    const data = {
+      username: username,
+      following: following
+    }
+    return this.http.post<keyable>(`${this.uri}/setIsFollowing`, data);
+  }
+
+  // SET THE GIVEN USER TO FOLLOW THE SELECTED
+  unfollow(username: string, following: string) {
+    const data = {
+      username: username,
+      following: following
+    }
+    return this.http.post<keyable>(`${this.uri}/unfollow`, data);
   }
 
   // GET ALL COMMENTS FOR A RECIPE

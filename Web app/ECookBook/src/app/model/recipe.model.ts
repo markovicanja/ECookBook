@@ -6,5 +6,6 @@ export class Recipe {
     img: string;
     description: string;
     author: string;
+    visibility: number;
     rating: number;
 }

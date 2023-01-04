@@ -45,8 +45,9 @@ export class AddRecipeComponent implements OnInit {
       return;
     }
 
-    const rating = 0;
-    this.service.addRecipe(this.name, this.difficulty, this.category, this.cuisine, this.img, this.description, this.user.username, rating).subscribe(res => {
+    const rating = 3;
+    const visibility = 0;
+    this.service.addRecipe(this.name, this.difficulty, this.category, this.cuisine, this.img, this.description, this.user.username, visibility, rating).subscribe(res => {
       this.error = res["poruka"];
     });
   }

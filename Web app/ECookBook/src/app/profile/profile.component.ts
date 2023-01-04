@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit {
       }
     });
 
+    this.following = [];
     this.service.getFollowings(this.user.username).subscribe(res => {
       if(res["status"] == 1){
         this.following = res["poruka"];

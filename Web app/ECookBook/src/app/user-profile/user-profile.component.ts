@@ -19,7 +19,6 @@ export class UserProfileComponent implements OnInit {
   following: boolean;
 
   ngOnInit(): void {
-    // TODO
     this.following = false;
 
     if (localStorage.getItem("userProfile") == null || localStorage.getItem("userProfile") == "") {
@@ -35,19 +34,30 @@ export class UserProfileComponent implements OnInit {
     this.service.getUserRecipes(this.user.username).subscribe(res => {
       if(res["status"] == 1){
         this.userRecipes = res["poruka"];
-        console.log(this.userRecipes)
+      }
+    });
+
+    this.service.getIsFollowing(this.loggedUser.username, this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.following = true;
       }
     });
   }
 
-  // TODO
-  follow() {
-    this.following = true;
+  follow() {    
+    this.service.setIsFollowing(this.loggedUser.username, this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.following = true;
+      }
+    });
   }
 
-  // TODO
-  unfollow() {
-    this.following = false;
+  unfollow() {    
+    this.service.unfollow(this.loggedUser.username, this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.following = false;
+      }
+    });
   }
 
   recipeRoute(recipe: Recipe) {

@@ -29,7 +29,7 @@
             
             <!--User recipes-->
             <div class="row" id="user-profile-pics">
-                <div *ngIf="userRecipes.length == 0" id="empty-div">
+                <div *ngIf="userRecipes && userRecipes.length == 0" id="empty-div">
                     <p>No recipes to show</p>
                 </div>
                 <div  *ngFor="let recipe of userRecipes" class='col-lg-4 col-md-6 special-grid recipes appetizer'>

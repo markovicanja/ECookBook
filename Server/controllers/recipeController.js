@@ -1,4 +1,6 @@
 const recipe = require("../models/recipe")
+const following = require("../models/savedRecipe")
+const following = require("../models/recommendedRecipe")
 
 class RecipeController{
     routeMethods(router){
@@ -29,6 +31,7 @@ class RecipeController{
             let img = req.body.img;
             let description = req.body.description;
             let author = req.body.author;
+            let visibility = req.body.visibility;
             let rating = req.body.rating;
             
             recipe.find({ 'name' : name }, (err, recipes) => {
@@ -41,6 +44,7 @@ class RecipeController{
                         'img': img,
                         'description' : description,
                         'author' : author,
+                        'visibility' : visibility,
                         'rating' : rating
                     });
                     res.json({status: 1, poruka: "Uspesno ste uneli recept."});
@@ -68,6 +72,7 @@ class RecipeController{
             Mix together mayonnaise, lemon juice, and pepper in a medium bowl. \
             Toss with chicken, toasted almonds, and celery.",
             author: "anja",
+            visibility: 0,
             rating: 4
         });
         recipe.collection.insertOne({
@@ -85,6 +90,7 @@ class RecipeController{
             Bake in the preheated oven until edges are nicely browned, about 10 minutes. \
             Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
             author: "nina",
+            visibility: 0,
             rating: 4
         });
         recipe.collection.insertOne({
@@ -104,6 +110,7 @@ class RecipeController{
             into the center of a muffin comes out clean, about 30 minutes. \
             Let cool slightly before serving.",
             author: "ogi",
+            visibility: 0,
             rating: 5
         });
         recipe.collection.insertOne({
@@ -127,6 +134,7 @@ class RecipeController{
             Remove pan from heat, squeeze lemon juice over entire dish, \
             and garnish with diced tomatoes.",
             author: "anja",
+            visibility: 0,
             rating: 5
         });
         recipe.collection.insertOne({
@@ -157,6 +165,7 @@ class RecipeController{
             Loosen the edges from the ramekin with a knife. Invert each cake onto a plate and \
             dust with powdered sugar.",
             author: "anja",
+            visibility: 0,
             rating: 5
         });
         recipe.collection.insertOne({
@@ -181,6 +190,7 @@ class RecipeController{
             the topping for about 15 minutes. When the topping is cool but not yet hard, cut \
             into squares; return to refrigerator to finish chilling.",
             author: "nina",
+            visibility: 0,
             rating: 5
         });
         recipe.collection.insertOne({
@@ -201,6 +211,7 @@ class RecipeController{
             Cover and refrigerate for 2 to 3 hours or overnight. Bring to room temperature \
             before cutting into bars.",
             author: "anja",
+            visibility: 0,
             rating: 3
         });
         recipe.collection.insertOne({
@@ -216,6 +227,7 @@ class RecipeController{
             about 7 to 9 minutes per side. An instant-read thermometer inserted into the center \
             should read 145 degrees F (63 degrees C).",
             author: "ogi",
+            visibility: 0,
             rating: 3
         });
         recipe.collection.insertOne({
@@ -242,6 +254,7 @@ class RecipeController{
             Bake in the preheated oven until golden brown, 30 to 40 minutes. \
             Cut into squares and serve while hot.",
             author: "nina",
+            visibility: 0,
             rating: 4
         });
         recipe.collection.insertOne({
@@ -258,6 +271,7 @@ class RecipeController{
             Cover, and cook until beef is tender enough to cut with a spoon, on Low for 8 \
             to 12 hours, or on High for 4 to 6 hours.",
             author: "ogi",
+            visibility: 0,
             rating: 4
         });
         recipe.collection.insertOne({
@@ -270,6 +284,7 @@ class RecipeController{
             blend to combine. Add ice cubes and puree until smooth. \
             Add protein powder and mix until evenly incorporated, about 30 seconds.",
             author: "anja",
+            visibility: 0,
             rating: 5
         });
         recipe.collection.insertOne({
@@ -283,6 +298,7 @@ class RecipeController{
             about 2 hours.\
             Run hot water over ice pop molds for a few seconds to unmold.",
             author: "nina",
+            visibility: 0,
             rating: 3
         });        
     }
