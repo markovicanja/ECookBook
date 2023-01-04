@@ -80,7 +80,7 @@
 
             <!--Following-->
             <div *ngIf="showed == 'following'" class="container container-following">
-                <div *ngIf="following.length == 0" id="empty-div">
+                <div *ngIf="following && following.length == 0" id="empty-div">
                     <p>You don't have followings yet</p>
                 </div>
                 <div *ngFor="let f of following">

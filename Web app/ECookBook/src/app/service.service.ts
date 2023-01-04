@@ -12,9 +12,13 @@ export interface keyable {
 
 export class ServiceService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.uri = "";
+    let arr : string[] = window.location.href.split(/[:]/);
+    this.uri = arr[0] + ":" + arr[1] + ":1234";
+  }
 
-  uri = 'http://localhost:1234'
+  uri : string;
 
   // GET ALL USERS
   getAllUsers() {
