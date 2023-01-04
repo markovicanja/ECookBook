@@ -238,6 +238,10 @@ const initDefaultRecords = (user, following, comment, recipe) => {
         author: "nina",
         rating: 3
     });
+
+    following.collection.deleteMany();
+    following.collection.insertOne({ username: "anja", following: "ogi" });
+    following.collection.insertOne({ username: "anja", following: "nina" });
 }
 
 module.exports = initDefaultRecords;

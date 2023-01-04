@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { followings } from '../data/following';
-import { Following } from '../model/following.model';
 import { Recipe } from '../model/recipe.model';
 import { User } from '../model/user.model';
 import { ServiceService } from '../service.service';
@@ -34,23 +32,14 @@ export class ProfileComponent implements OnInit {
     this.service.getUserRecipes(this.user.username).subscribe(res => {
       if(res["status"] == 1){
         this.userRecipes = res["poruka"];
-        console.log(this.userRecipes)
       }
     });
 
-    let allFollowings: Following[];
-    if (localStorage.getItem("allFollowings") == "" || localStorage.getItem("allFollowings") == null) {
-      allFollowings = followings;
-      localStorage.setItem("allFollowings", JSON.stringify(allFollowings)); 
-    }
-    else {
-      allFollowings = JSON.parse(localStorage.getItem("allFollowings")!);
-    }
-
-    this.following = [];
-    allFollowings.forEach(f => {
-      if (f.username == this.user.username) this.following.push(f.following);
-    })
+    this.service.getFollowings(this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.following = res["poruka"];
+      }
+    });
   }
 
   change(s: String) {

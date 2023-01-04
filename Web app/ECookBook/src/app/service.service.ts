@@ -62,4 +62,12 @@ export class ServiceService {
     return this.http.post<keyable>(`${this.uri}/getUserRecipes`, data);
   }
 
+  // GET ALL PEOPLE THE GIVEN USER IS FOLLOWING
+  getFollowings(username: string) {
+    const data = {
+      username: username
+    }
+    return this.http.post<keyable>(`${this.uri}/getFollowings`, data);
+  }
+
 }
