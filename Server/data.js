@@ -1,7 +1,11 @@
-import { Recipe } from "../model/recipe.model";
+const initDefaultRecords = (user, following, comment, recipe) => {
+    user.collection.deleteMany();
+    user.collection.insertOne({ username: "anja", email: "anja@gmail.com", password: "123" });
+    user.collection.insertOne({ username: "ogi", email: "ogi@gmail.com", password: "123" });
+    user.collection.insertOne({ username: "nina", email: "nina@gmail.com", password: "123" });
 
-export var allRecipes: Recipe[] = [
-    {
+    recipe.collection.deleteMany();
+    recipe.collection.insertOne({
         name: "Chicken salad",
         difficulty: 2,
         category: "Salad",
@@ -18,8 +22,8 @@ export var allRecipes: Recipe[] = [
         Toss with chicken, toasted almonds, and celery.",
         author: "anja",
         rating: 4
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Cookies",
         difficulty: 3,
         category: "Dessert",
@@ -35,8 +39,8 @@ export var allRecipes: Recipe[] = [
         Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
         author: "nina",
         rating: 4
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Breakfast muffins",
         difficulty: 1,
         category: "Breakfast",
@@ -54,8 +58,8 @@ export var allRecipes: Recipe[] = [
         Let cool slightly before serving.",
         author: "ogi",
         rating: 5
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Healthy carbonara",
         difficulty: 5,
         category: "Dinner",
@@ -77,8 +81,8 @@ export var allRecipes: Recipe[] = [
         and garnish with diced tomatoes.",
         author: "anja",
         rating: 5
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Lava cake",
         difficulty: 5,
         category: "Dessert",
@@ -107,8 +111,8 @@ export var allRecipes: Recipe[] = [
         dust with powdered sugar.",
         author: "anja",
         rating: 5
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Nutty squares",
         difficulty: 3,
         category: "Dessert",
@@ -131,8 +135,8 @@ export var allRecipes: Recipe[] = [
         into squares; return to refrigerator to finish chilling.",
         author: "nina",
         rating: 5
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Oatmeal bars",
         difficulty: 2,
         category: "Dessert",
@@ -151,8 +155,8 @@ export var allRecipes: Recipe[] = [
         before cutting into bars.",
         author: "anja",
         rating: 3
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Pork chops",
         difficulty: 5,
         category: "Dinner",
@@ -166,8 +170,8 @@ export var allRecipes: Recipe[] = [
         should read 145 degrees F (63 degrees C).",
         author: "ogi",
         rating: 3
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Spinach pie",
         difficulty: 3,
         category: "Breakfast",
@@ -192,8 +196,8 @@ export var allRecipes: Recipe[] = [
         Cut into squares and serve while hot.",
         author: "nina",
         rating: 4
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Stew",
         difficulty: 4,
         category: "Dinner",
@@ -208,8 +212,8 @@ export var allRecipes: Recipe[] = [
         to 12 hours, or on High for 4 to 6 hours.",
         author: "ogi",
         rating: 4
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Strawberry and banana smoothie",
         difficulty: 1,
         category: "Dessert",
@@ -220,8 +224,8 @@ export var allRecipes: Recipe[] = [
         Add protein powder and mix until evenly incorporated, about 30 seconds.",
         author: "anja",
         rating: 5
-    },
-    {
+    });
+    recipe.collection.insertOne({
         name: "Watermelon ice pops",
         difficulty: 2,
         category: "Dessert",
@@ -233,5 +237,7 @@ export var allRecipes: Recipe[] = [
         Run hot water over ice pop molds for a few seconds to unmold.",
         author: "nina",
         rating: 3
-    },
-]
+    });
+}
+
+module.exports = initDefaultRecords;

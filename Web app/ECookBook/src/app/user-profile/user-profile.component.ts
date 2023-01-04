@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { allRecipes } from '../data/recipes';
 import { Recipe } from '../model/recipe.model';
 import { User } from '../model/user.model';
+import { ServiceService } from '../service.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,7 +11,7 @@ import { User } from '../model/user.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private service: ServiceService, private router: Router) { }
 
   user: User;
   loggedUser: User;
@@ -31,20 +31,13 @@ export class UserProfileComponent implements OnInit {
       this.router.navigate(["home"]);
     }
     else this.loggedUser = JSON.parse(localStorage.getItem("user")!);
-
-    let recipes: Recipe[];
-    if (localStorage.getItem("allRecipes") == "" || localStorage.getItem("allRecipes") == null) {
-      recipes = allRecipes;
-      localStorage.setItem("allRecipes", JSON.stringify(recipes)); 
-    }
-    else {
-      recipes = JSON.parse(localStorage.getItem("allRecipes")!);
-    }
-
-    this.userRecipes = [];
-    recipes.forEach(recipe => {
-      if (recipe.author == this.user.username) this.userRecipes.push(recipe);
-    })
+    
+    this.service.getUserRecipes(this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.userRecipes = res["poruka"];
+        console.log(this.userRecipes)
+      }
+    });
   }
 
   // TODO

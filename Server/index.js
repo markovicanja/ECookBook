@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const app = express()
 const http = require('http').Server(app)
+const defaultRecords = require('./data.js')
 
 //models:
 const user = require("./models/user")
@@ -23,19 +24,12 @@ conn.once('open', () => {
     console.log('mongo open');
 });
 
-function initDefaultRecords() {
-    user.collection.deleteMany();
-    user.collection.insertOne({ username: "anja", email: "anja@gmail.com", password: "123" });
-    user.collection.insertOne({ username: "ogi", email: "ogi@gmail.com", password: "123" });
-    user.collection.insertOne({ username: "nina", email: "nina@gmail.com", password: "123" });
-}
-
 const router = express.Router();
 
 // User methodes
 router.route('/getAllUsers').get((req, res) => {
     user.find({}, (err, users) => {
-        if (err) console.log(err);
+        if (err) res.json({status: 0, poruka: err});
         else res.json(users);
     });
 });
@@ -44,7 +38,7 @@ router.route('/findUser').post((req, res) => {
     let username = req.body.username;
     
     user.findOne({'username' : username}, (err, user) => {
-        if (err) console.log(err);
+        if (err) res.json({status: 0, poruka: err});
         else{
             if(user) res.json({status: 1, username: user.username, email: user.email});
             else res.json({status: 0, poruka: "error"});
@@ -57,7 +51,7 @@ router.route('/loginUser').post((req, res) => {
     let password = req.body.password;
     
     user.findOne({'username' : username, 'password' : password}, (err, user) => {
-        if (err) console.log(err);
+        if (err) res.json({status: 0, poruka: err});
         else{
             if(user) res.json({status: 1, poruka: user});
             else res.json({status: 0, poruka: "Neispravni kredencijali."});
@@ -84,7 +78,27 @@ router.route('/registerUser').post((req, res) => {
     });
 });
 
-initDefaultRecords();
+// Recipe methodes
+router.route('/getAllRecipes').get((req, res) => {
+    recipe.find({}, (err, recipes) => {
+        if (err) res.json({status: 0, poruka: err});
+        else res.json({status: 1, poruka: recipes});
+    });
+});
+
+router.route('/getUserRecipes').post((req, res) => {
+    let username = req.body.username;
+    
+    recipe.find({'author' : username}, (err, recipes) => {
+        if (err) res.json({status: 0, poruka: err});
+        else{
+            if(recipes.length != 0) res.json({status: 1, poruka: recipes});
+            else res.json({status: 0, poruka: "error"});
+        }
+    });
+});
+
+defaultRecords(user, following, comment, recipe);
 
 app.use('/', router)
 http.listen(1234, () => {

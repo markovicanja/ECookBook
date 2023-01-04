@@ -48,7 +48,6 @@ export class HomeComponent implements OnInit {
     
     this.service.loginUser(this.username, this.password).subscribe(res => {
       if(res["status"] == 1){
-        console.log(res["poruka"]);
         localStorage.setItem('user', JSON.stringify(res["poruka"]));
         window.location.reload();
       }
