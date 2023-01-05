@@ -31,7 +31,7 @@
 
                         <!-- Comments here -->
                         <li class='comment-item' *ngFor="let comment of comments">
-                            <div class='comment-body'>
+                            <div class='comment-body' (click)="userRoute(comment.author)">
                                 <div class='comment-img'>
                                     <img src='../../assets/user.jpg' />
                                 </div>
@@ -117,11 +117,15 @@
                         <form>
                             <div class="control-group">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="username" [(ngModel)]="username" placeholder="Username" />
+                                    <input list="followings" class="form-control" name="following" [(ngModel)]="username" placeholder="Username" />
+                                    <datalist id="followings">
+                                        <option *ngFor="let following of followings" [value]="following">{{following}}</option>
+                                    </datalist>
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="far fa-user"></i></div>
                                     </div>
                                 </div>
+                                {{recommendErrorMsg}}
                             </div>
                             <div>
                                 <button class="btn custom-btn" type="button" (click)='recommend()'>Recommend</button>

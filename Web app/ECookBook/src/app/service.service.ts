@@ -81,6 +81,59 @@ export class ServiceService {
     return this.http.post<keyable>(`${this.uri}/addRecipe`, data);
   }
 
+  // FIND ALL RECOMMENDED RECIPES FOR GIVEN USER
+  getAllRecommendedRecipes(username: string){
+    const data = {
+      username: username
+    }
+    return this.http.post<keyable>(`${this.uri}/getAllRecommendedRecipes`, data);
+  }
+  
+  // RECOMMEND GIVEN RECIPE TO USER
+  recommendRecipe(username: string, usernameOfFollowing: string, recipeName: string){
+    const data = {
+      username: username,
+      usernameOfFollowing: usernameOfFollowing,
+      recipeName: recipeName
+    }
+    return this.http.post<keyable>(`${this.uri}/recommendRecipe`, data);
+  }
+
+  // FIND ALL SAVED RECIPES FOR GIVEN USER
+  getAllSavedRecipes(username: string){
+    const data = {
+      username: username
+    }
+    return this.http.post<keyable>(`${this.uri}/getAllSavedRecipes`, data);
+  }
+
+  // FIND IF USER SAVED GIVEN RECIPE
+  findIfUserSavedRecipe(username: string, recipeName: string){
+    const data = {
+      username: username,
+      recipeName: recipeName
+    }
+    return this.http.post<keyable>(`${this.uri}/findIfUserSavedRecipe`, data);
+  }
+
+  // SAVE GIVEN RECIPE FOR USER
+  saveRecipe(username: string, recipeName: string){
+    const data = {
+      username: username,
+      recipeName: recipeName
+    }
+    return this.http.post<keyable>(`${this.uri}/saveRecipe`, data);
+  }
+
+  // REMOVE SAVED RECIPE
+  removeSavedRecipe(username: string, recipeName: string){
+    const data = {
+      username: username,
+      recipeName: recipeName
+    }
+    return this.http.post<keyable>(`${this.uri}/removeSavedRecipe`, data);
+  }
+
   // GET ALL PEOPLE THE GIVEN USER IS FOLLOWING
   getFollowings(username: string) {
     const data = {

@@ -41,6 +41,18 @@ export class ProfileComponent implements OnInit {
         this.following = res["poruka"];
       }
     });
+
+    this.service.getAllSavedRecipes(this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.savedRecipes = res["poruka"];
+      }
+    });
+    
+    this.service.getAllRecommendedRecipes(this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.recommendedRecipes = res["poruka"];
+      }
+    });
   }
 
   change(s: String) {

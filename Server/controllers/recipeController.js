@@ -1,6 +1,7 @@
 const recipe = require("../models/recipe")
-const following = require("../models/savedRecipe")
-const following = require("../models/recommendedRecipe")
+const savedRecipe = require("../models/savedRecipe")
+const recommendedRecipe = require("../models/recommendedRecipe");
+const e = require("express");
 
 class RecipeController{
     routeMethods(router){
@@ -50,6 +51,159 @@ class RecipeController{
                     res.json({status: 1, poruka: "Uspesno ste uneli recept."});
                 }
                 else res.json({status: 0, poruka: "Recept vec postoji u sistemu."});
+            });
+        });
+
+        router.route('/getAllRecommendedRecipes').post((req, res) => {
+            let username = req.body.username;
+            
+            recommendedRecipe.find({ 'usernameOfFollowing' : username }, (err, rRecipes) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    let array = [];
+                    if(rRecipes && rRecipes.length != 0){
+                        rRecipes.forEach(x => {
+                            if(x.recipeNames.length != 0){
+                                x.recipeNames.forEach(y => {
+                                    if(array.indexOf(y) === -1) {
+                                        array.push(y);
+                                    }
+                                });
+                            } 
+                        }); 
+                        
+                        if(array.length !=0){
+                            recipe.find({}, (err, allRecipes) => {
+                                if (err) res.json({status: 0, poruka: err});
+                                else{
+                                    let arrayRet = [];
+                                    allRecipes.forEach(x => {
+                                        array.forEach(y => {
+                                            if(x.name === y) arrayRet.push(x);
+                                        });
+                                    });
+    
+                                    res.json({status: 1, poruka: arrayRet});
+                                }
+                            }); 
+                        }
+                        else res.json({status: 0, poruka: "no recipes"});
+                    }
+                    else res.json({status: 0, poruka: "no recipes"});
+                }
+            });
+        });
+
+        router.route('/recommendRecipe').post((req, res) => {
+            let username = req.body.username;
+            let usernameOfFollowing = req.body.usernameOfFollowing;
+            let recipeName = req.body.recipeName;
+            
+            recommendedRecipe.findOne({ 'username' : username, 'usernameOfFollowing' : usernameOfFollowing }, (err, rRecipe) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    if(rRecipe){
+                        if(!rRecipe.recipeNames.includes(recipeName)){
+                            recommendedRecipe.collection.updateOne({ 'username' : username,  'usernameOfFollowing' : usernameOfFollowing }, {$push: {'recipeNames' : recipeName}});
+                            res.json({status: 1, poruka: "success"});
+                        }else{
+                            res.json({status: 0, poruka: "no recipe"});
+                        }
+                    }
+                    else{
+                        recommendedRecipe.collection.insertOne({ 'username' : username, 'usernameOfFollowing' : usernameOfFollowing, 'recipeNames' : [recipeName]});
+                    }
+                }
+            });
+        });
+
+        router.route('/getAllSavedRecipes').post((req, res) => {
+            let username = req.body.username;
+            
+            savedRecipe.findOne({ 'username' : username }, (err, sRecipe) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    if(sRecipe){
+                        recipe.find({}, (err, allRecipes) => {
+                            if (err) res.json({status: 0, poruka: err});
+                            else{
+                                let array = [];
+                                allRecipes.forEach(x => {
+                                    sRecipe.recipeNames.forEach(y => {
+                                        if(x.name === y) array.push(x);
+                                    });
+                                });
+
+                                res.json({status: 1, poruka: array});
+                            }
+                        });                        
+                    }
+                    else res.json({status: 0, poruka: "no recipes"});
+                }
+            });
+        });
+
+        router.route('/findIfUserSavedRecipe').post((req, res) => {
+            let username = req.body.username;
+            let recipeName = req.body.recipeName;
+            
+            savedRecipe.findOne({ 'username' : username }, (err, recipe) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    if(recipe){
+                        if(recipe.recipeNames.includes(recipeName)){
+                            res.json({status: 1, poruka: "success"});
+                        }else{
+                            res.json({status: 0, poruka: "no recipe"});
+                        }
+                    }
+                    else res.json({status: 0, poruka: "no recipes"});
+                }
+            });
+        });
+        
+        router.route('/saveRecipe').post((req, res) => {
+            let username = req.body.username;
+            let recipeName = req.body.recipeName;
+            
+            savedRecipe.findOne({ 'username' : username }, (err, recipe) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    if(recipe){
+                        if(!recipe.recipeNames.includes(recipeName)){
+                            savedRecipe.collection.updateOne({ 'username' : username }, {$push: {'recipeNames' : recipeName}});
+                            res.json({status: 1, poruka: "success"});
+                        }else{
+                            res.json({status: 0, poruka: "no recipe"});
+                        }
+                    }
+                    else{
+                        savedRecipe.collection.insertOne({ 'username' : username , 'recipeNames' : [recipeName]});
+                        res.json({status: 1, poruka: "success"});
+                    }
+                }
+            });
+        });
+        
+        router.route('/removeSavedRecipe').post((req, res) => {
+            let username = req.body.username;
+            let recipeName = req.body.recipeName;
+            
+            savedRecipe.findOne({ 'username' : username }, (err, recipe) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    if(recipe){
+                        if(recipe.recipeNames.includes(recipeName)){
+                            savedRecipe.collection.updateOne({ 'username' : username }, {$pull: {'recipeNames' : recipeName}});
+                            res.json({status: 1, poruka: "success"});
+                        }else{
+                            res.json({status: 0, poruka: "no recipe"});
+                        }
+                    }
+                    else{
+                        res.json({status: 0, poruka: "no recipes"});
+                    }
+                }
             });
         });
     }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Comment } from '../model/comment.model';
 import { Recipe } from '../model/recipe.model';
+import { User } from '../model/user.model';
 import { ServiceService } from '../service.service';
 
 @Component({
@@ -13,15 +14,18 @@ export class RecipeComponent implements OnInit {
 
   constructor(private service: ServiceService, private router: Router) { }
 
+  user: User;
   recipe: Recipe;
   comments: Comment[];
   saved: boolean;
-  username: String;
+  username: string; //recommend
+
+  recommendErrorMsg: string;
+  followings: string[];
 
   ngOnInit(): void {
-
-    // TODO
-    this.saved = false;
+    if (localStorage.getItem("user") == null) return;
+    else this.user = JSON.parse(localStorage.getItem("user")!);
 
     if (localStorage.getItem("recipe") == null || localStorage.getItem("recipe") == "") {
       this.router.navigate(["home"]);
@@ -33,22 +37,63 @@ export class RecipeComponent implements OnInit {
         this.comments = (res["poruka"] as Comment[]);
       }
     });
-  }
+    
+    this.recommendErrorMsg = "";
+    this.followings = [];
+    this.service.getFollowings(this.user.username).subscribe(res => {
+      if(res["status"] == 1){
+        this.followings = res["poruka"];
+      }
+    });
 
-  // TODO
-  save() {
-    this.saved = true;
-  }
-
-  // TODO
-  remove() {
     this.saved = false;
+    this.service.findIfUserSavedRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      if(res["status"] == 1){
+        this.saved = true;
+      }
+    })
+  }
+  
+  userRoute(username: String) {
+    if(username === this.user.username) return;
+    this.service.findUser(username.toString()).subscribe(res => {
+      if(res["status"] == 1){
+        localStorage.setItem("userProfile", JSON.stringify({'username' : res["username"], 'email' : res["email"]}))
+        this.router.navigate(["userProfile"]);
+      }
+    })
   }
 
-  // TODO
   recommend() {
-
+    this.recommendErrorMsg = "";
+    if(!this.followings.includes(this.username)){
+      this.recommendErrorMsg = "Niste uneli dobar username.";
+      return;
+    }
+    
+    this.service.recommendRecipe(this.user.username, this.username, this.recipe.name).subscribe(res => {
+      if(res["status"] == 1){
+        this.recommendErrorMsg = "Uspesno ste preporucili recept.";
+      }
+    })
   }
+
+  save() {
+    this.service.saveRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      if(res["status"] == 1){
+        this.saved = true;
+      }
+    })
+  }
+
+  remove() {    
+    this.service.removeSavedRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      if(res["status"] == 1){
+        this.saved = false;
+      }
+    })
+  }
+
 
   // TODO
   visibility(s: String) {
