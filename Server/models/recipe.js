@@ -31,8 +31,12 @@ const Recipe = new Schema({
         type: String,
         required: true
     },
+    visibility: {
+        type: Number,
+        required: true
+    },
     rating: {
-        type: String,
+        type: Number,
         required: true
     }
 });

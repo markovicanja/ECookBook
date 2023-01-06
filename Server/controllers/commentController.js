@@ -13,6 +13,23 @@ class CommentController{
                 }
             });
         });
+        
+        router.route('/addComment').post((req, res) => {
+            let recipe = req.body.recipe;
+            let author = req.body.author;
+            let date = req.body.date;
+            let time = req.body.time;
+            let body = req.body.body;
+            
+            comment.collection.insertOne({
+                recipe: recipe, 
+                author: author,
+                date: date,
+                time: time,
+                body: body
+            });
+            res.json({status: 1, poruka: "success"});
+        });
     }
     
     defaultRecords(){

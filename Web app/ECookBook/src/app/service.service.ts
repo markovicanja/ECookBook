@@ -57,6 +57,14 @@ export class ServiceService {
     return this.http.get<keyable>(`${this.uri}/getAllRecipes`);
   }
 
+  // GET ALL RECIPES BY VISIBILITY
+  getAllRecipesByVisibility(username: string) {
+    const data = {
+      username: username
+    }
+    return this.http.post<keyable>(`${this.uri}/getAllRecipesByVisibility`, data);
+  }
+
   // GET ALL RECIPES FROM GIVEN USER
   getUserRecipes(username: string) {
     const data = {
@@ -79,6 +87,24 @@ export class ServiceService {
       rating: rating
     }
     return this.http.post<keyable>(`${this.uri}/addRecipe`, data);
+  }
+
+  // CHANGE VISIBILITY FOR A GIVEN RECIPE
+  changeVisiblity(name: string, visibility: number){
+    const data = {
+      name: name,
+      visibility: visibility
+    }
+    return this.http.post<keyable>(`${this.uri}/changeVisiblity`, data);
+  }
+
+  // RATE GIVEN RECIPE
+  rateRecipe(name: string, rating: number){
+    const data = {
+      name: name,
+      rating: rating
+    }
+    return this.http.post<keyable>(`${this.uri}/rateRecipe`, data);
   }
 
   // FIND ALL RECOMMENDED RECIPES FOR GIVEN USER
@@ -175,6 +201,18 @@ export class ServiceService {
       recipe: recipe
     }
     return this.http.post<keyable>(`${this.uri}/getComments`, data);
+  }
+
+  // ADD COMMENT FOR A GIVEN RECIPE
+  addComment(recipe: string, author: string, date: string | null, time: string | null, body: string){
+    const data = {
+      recipe: recipe,
+      author: author,
+      date: date,
+      time: time,
+      body: body
+    }
+    return this.http.post<keyable>(`${this.uri}/addComment`, data);
   }
 
 }

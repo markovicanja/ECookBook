@@ -1,6 +1,7 @@
 const recipe = require("../models/recipe")
 const savedRecipe = require("../models/savedRecipe")
 const recommendedRecipe = require("../models/recommendedRecipe");
+const following = require("../models/following")
 const e = require("express");
 
 class RecipeController{
@@ -12,6 +13,37 @@ class RecipeController{
             });
         });
         
+        router.route('/getAllRecipesByVisibility').post((req, res) => {
+            let username = req.body.username;
+
+            recipe.find({}, (err, recipes) => {
+                if (err) res.json({status: 0, poruka: err});
+                else{
+                    following.find({'username' : username}, (error, followers) => {
+                        if (error) res.json({status: 0, poruka: error});
+                        else{
+                            let array = [];
+                            recipes.forEach(element => {
+                                if(element.author === username){
+                                    array.push(element);
+                                }else{
+                                    if(element.visibility == 0){
+                                        array.push(element);
+                                    }
+                                    else if(element.visibility == 1){
+                                        if(followers.findIndex((obj) => element.author === obj.following) !== -1){
+                                            array.push(element);
+                                        }
+                                    }
+                                }
+                            });
+                            res.json({status: 1, poruka: array});
+                        }
+                    });
+                }
+            });
+        });
+
         router.route('/getUserRecipes').post((req, res) => {
             let username = req.body.username;
             
@@ -51,6 +83,37 @@ class RecipeController{
                     res.json({status: 1, poruka: "Uspesno ste uneli recept."});
                 }
                 else res.json({status: 0, poruka: "Recept vec postoji u sistemu."});
+            });
+        });
+
+        router.route('/changeVisiblity').post((req, res) => {
+            let name = req.body.name;
+            let visibility = req.body.visibility;
+            
+            recipe.findOne({ 'name' : name }, (err, rec) => {
+                if (rec){
+                    recipe.collection.updateOne({'name' : name}, {$set: {'visibility': visibility }});
+                    res.json({status: 1, poruka: "Uspesno promenjeno!"});
+                }
+                else res.json({status: 0, poruka: "Recept ne postoji u sistemu."});
+            });
+        });
+
+        router.route('/rateRecipe').post((req, res) => {
+            let name = req.body.name;
+            let rating = req.body.rating;
+            
+            recipe.findOne({ 'name' : name }, (err, rec) => {
+                if (rec){
+                    let newVal = rec.rating;
+                    if(newVal > rating) newVal = parseFloat(newVal) - 0.1;
+                    else if(newVal < rating) newVal = parseFloat(newVal) + 0.1;
+                    newVal = parseFloat(newVal);
+
+                    recipe.collection.updateOne({'name' : name}, {$set: {'rating': newVal }});
+                    res.json({status: 1, poruka: newVal});
+                }
+                else res.json({status: 0, poruka: "Recept ne postoji u sistemu."});
             });
         });
 
@@ -209,6 +272,9 @@ class RecipeController{
     }
 
     defaultRecords(){
+        recommendedRecipe.collection.deleteMany();
+        savedRecipe.collection.deleteMany();
+
         recipe.collection.deleteMany();
         recipe.collection.insertOne({
             name: "Chicken salad",

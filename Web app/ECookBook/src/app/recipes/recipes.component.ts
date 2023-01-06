@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Recipe } from '../model/recipe.model';
+import { User } from '../model/user.model';
 import { ServiceService } from '../service.service';
 
 @Component({
@@ -12,6 +13,8 @@ export class RecipesComponent implements OnInit {
 
   constructor(private service: ServiceService, private router: Router) { }
 
+  user: User;
+
   allRecipes: Recipe[];
 
   queriedRecipes: Recipe[];
@@ -22,10 +25,13 @@ export class RecipesComponent implements OnInit {
   selectedCategory: string;
 
   ngOnInit(): void {
+    if (localStorage.getItem("user") == null) return;
+    else this.user = JSON.parse(localStorage.getItem("user")!);
+
     this.searchQuery = "";
     this.sorter = "Sort";
     this.selectedCategory = "All";
-    this.service.getAllRecipes().subscribe(res => {
+    this.service.getAllRecipesByVisibility(this.user.username).subscribe(res => {
       if(res["status"] == 1){
         this.allRecipes = res["poruka"];
         this.queriedRecipes = this.allRecipes;

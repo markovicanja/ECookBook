@@ -49,24 +49,24 @@
                     <form>
                         <h2 id="leave-comment">Leave a comment:</h2>
                         <div class="form-group">
-                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                            <textarea id="message" cols="30" rows="5" class="form-control" [(ngModel)]="currentComment" name="currentComment"></textarea>
                         </div>
                         <div class="errors" id="msg-empty-error"></div>
                         <div id="rating-submit">
                             <div class="rate">
-                                <input type="radio" id="star5" class="rate" name="rate" value="5" />
+                                <input type="radio" id="star5" class="rate" name="rate" value="5" [(ngModel)]="currentRate5"/>
                                 <label for="star5" title="text">5 stars</label>
-                                <input type="radio" class="rate" id="star4" name="rate" value="4" />
+                                <input type="radio" class="rate" id="star4" name="rate" value="4" [(ngModel)]="currentRate4"/>
                                 <label for="star4" title="text">4 stars</label>
-                                <input type="radio" class="rate" id="star3" name="rate" value="3" />
+                                <input type="radio" class="rate" id="star3" name="rate" value="3" [(ngModel)]="currentRate3"/>
                                 <label for="star3" title="text">3 stars</label>
-                                <input type="radio" class="rate" id="star2" name="rate" value="2" />
+                                <input type="radio" class="rate" id="star2" name="rate" value="2" [(ngModel)]="currentRate2"/>
                                 <label for="star2" title="text">2 stars</label>
-                                <input type="radio" class="rate" id="star1" name="rate" value="1" />
+                                <input type="radio" class="rate" id="star1" name="rate" value="1" [(ngModel)]="currentRate1"/>
                                 <label for="star1" title="text">1 star</label>
                             </div>
                             <div class="form-group">
-                                <a class="btn custom-btn" id="comment-submit">Comment</a>
+                                <a class="btn custom-btn" id="comment-submit" (click)="submitComment()">Comment</a>
                             </div>
                         </div>
                     </form>
@@ -86,12 +86,12 @@
                     <div class="sidebar-widget">
                         <h2 class="widget-title recipe-author">Author: {{ recipe.author }}</h2>
                         <h2 class="widget-title recipe-difficulty">Difficulty: {{ recipe.difficulty }}</h2>
-                        <h2 class="widget-title recipe-mark">Rating: {{ recipe.rating }}</h2>
+                        <h2 class="widget-title recipe-mark">Rating: {{ recipe.rating | number : '0.1-1' }}</h2>
 
                         <button class="btn custom-btn btn-green" (click)="save()" *ngIf="!saved">Save</button>
                         <button class="btn custom-btn" (click)="remove()" *ngIf="saved">Remove</button>
                         <button class="btn custom-btn btn-green" data-toggle="modal" data-target="#recommend-modal">Recommend</button>
-                        <button class="btn custom-btn btn-green" data-toggle="modal" data-target="#visibility-modal">Change visibility</button>
+                        <button class="btn custom-btn btn-green" data-toggle="modal" data-target="#visibility-modal" [disabled]="!isChangingVisibilityAvailable">Change visibility</button>
 
                     </div>
                 </div>
@@ -159,6 +159,7 @@
                                 <button style="margin-top: 2rem" class="btn custom-btn" type="button" (click)='visibility("followers")'>Only for followers</button>
                                 <button style="margin-top: 2rem" class="btn custom-btn" type="button" (click)='visibility("hide")'>Hide for everyone</button>
                             </div>
+                            {{visibilityMsg}}
                         </form>
                     </div>
                 </div>
