@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,8 +20,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import rs.ac.bg.ecookbook.databinding.ActivityMainBinding;
+import rs.ac.bg.ecookbook.models.UserModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ServiceSetter{
 
     private ActivityMainBinding binding;
     public SharedPreferences sharedPreferences;
@@ -51,14 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 String username = usernameText.getText().toString();
                 String password = passwordText.getText().toString();
 
-                // TODO
-                Toast.makeText(this, username + " " + password, Toast.LENGTH_LONG).show();
+                Service.getInstance().loginUser(this, username, password);
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("logged", true);
-                editor.apply();
-
-                invalidateOptionsMenu();
                 dialog.dismiss();
             });
 
@@ -78,21 +74,26 @@ public class MainActivity extends AppCompatActivity {
             EditText confirmPasswordText = view.findViewById(R.id.confirm_password_text);
             Button registerButton = view.findViewById(R.id.register_button);
 
+            AlertDialog dialog = alert.create();
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.show();
+
             registerButton.setOnClickListener(l -> {
                 String username = usernameText.getText().toString();
                 String email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
                 String confirmPassword = confirmPasswordText.getText().toString();
+                if(!password.equals(confirmPassword)){
+                    Toast.makeText(this,
+                            "Passwords do not match!",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-                // TODO
-                Toast.makeText(this,
-                        username + ", " + email + ", " + password + ", " + confirmPassword,
-                        Toast.LENGTH_LONG).show();
+                Service.getInstance().registerUser(this, username, password, email);
+
+                dialog.dismiss();
             });
-
-            AlertDialog dialog = alert.create();
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            dialog.show();
         });
     }
 
@@ -158,5 +159,19 @@ public class MainActivity extends AppCompatActivity {
                     return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    @Override
+    public void setUserModel(UserModel userModel){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("logged", true);
+        editor.apply();
+
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }
