@@ -47,6 +47,8 @@ export class RecipeComponent implements OnInit {
 
     this.visibilityMsg = "";
 
+    this.comments = [];
+
     if (localStorage.getItem("recipe") == null || localStorage.getItem("recipe") == "") {
       this.router.navigate(["home"]);
     }
