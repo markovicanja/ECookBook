@@ -3,6 +3,7 @@ package rs.ac.bg.ecookbook;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import android.widget.Toast;
 
 import rs.ac.bg.ecookbook.databinding.ActivityAddRecipeBinding;
 
-public class AddRecipeActivity extends AppCompatActivity {
+public class AddRecipeActivity extends AppCompatActivity implements ServiceSetter {
 
     private ActivityAddRecipeBinding binding;
 
@@ -52,7 +53,13 @@ public class AddRecipeActivity extends AppCompatActivity {
             String imgURL = binding.imageText.getText().toString();
             String description = binding.descriptionText.getText().toString();
 
-            // TODO
+            if("".equals(name) || "".equals(category) || "".equals(cuisine) || "".equals(imgURL) || "".equals(description)){
+                Toast.makeText(this, "Morate popuniti sva polja.", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Service.getInstance().addRecipe(this, name, difficulty, category, cuisine, description,
+                        Service.getInstance().getLoggedUser().getUsername(), imgURL, 3, 0);
+            }
         });
     }
 
@@ -97,5 +104,10 @@ public class AddRecipeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

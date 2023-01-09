@@ -800,6 +800,42 @@ public class Service {
         });
     }
 
+    public void addRecipe(ServiceSetter setter, String name, int difficulty, String category, String cuisine, String description,
+                          String author, String img, double rating, int visibility) {
+        String url = mURL + "addRecipe";
+        JSONObject params = new JSONObject();
+        StringEntity entity = null;
+        try {
+            params.put("name", name);
+            params.put("difficulty", difficulty);
+            params.put("category", category);
+            params.put("cuisine", cuisine);
+            params.put("img", img);
+            params.put("description", description);
+            params.put("author", author);
+            params.put("visibility", visibility);
+            params.put("rating", rating);
+            entity = new StringEntity(params.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mClient.post(setter.getContext(), url, entity, "application/json", new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Toast.makeText(setter.getContext(), response.getString("poruka"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                Toast.makeText(setter.getContext(), "Request failed.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void changeVisiblity(ServiceSetter setter, String name, int visibility) {
         String url = mURL + "changeVisiblity";
         JSONObject params = new JSONObject();
