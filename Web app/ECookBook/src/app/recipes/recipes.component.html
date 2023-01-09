@@ -71,15 +71,13 @@
             </ul>
             <div class="row" id="pics">
                 <!-- Recipes -->
-                <div class="row" id="pics">
-                    <div *ngFor="let recipe of queriedRecipes" class="col-lg-4 col-md-6 special-grid recipes appetizer">
-                        <a (click)="recipeRoute(recipe)">
-                            <img src="../../assets/recipes/{{ recipe.img }}_1.jpg" class="img-recipe" alt="Image">
-                            <p style="color: #719a0a;">
-                                {{ recipe.name }} | Difficulty: {{ recipe.difficulty }} |  Rating: {{ recipe.rating | number : '0.1-1' }}
-                            </p>
-                        </a>
-                    </div>
+                <div *ngFor="let recipe of queriedRecipes" class="col-lg-4 col-md-6 special-grid recipes appetizer">
+                    <a (click)="recipeRoute(recipe)">
+                        <img src="../../assets/recipes/{{ recipe.img }}_1.jpg" class="img-recipe" alt="Image">
+                        <p style="color: #719a0a;">
+                            {{ recipe.name }} | Difficulty: {{ recipe.difficulty }} |  Rating: {{ recipe.rating | number : '0.1-1' }}
+                        </p>
+                    </a>
                 </div>
             </div>
         </div>
