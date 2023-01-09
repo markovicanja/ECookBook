@@ -64,7 +64,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
 
             resetButtonColors();
             binding.myRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
             binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
@@ -75,7 +74,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
 
             resetButtonColors();
             binding.savedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
             binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
@@ -86,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
 
             resetButtonColors();
             binding.recommendedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.VISIBLE);
             binding.followingLayout.setVisibility(View.INVISIBLE);
         });
 
@@ -94,6 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
             resetButtonColors();
             binding.followingButton.setBackgroundColor(getResources().getColor(R.color.green));
             binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.noRecipesLayout.setVisibility(View.INVISIBLE);
             binding.followingLayout.setVisibility(View.VISIBLE);
         });
 
@@ -124,7 +122,14 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
     }
 
     private void setContent() {
-        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
+        if(recipeModels.isEmpty()) {
+            binding.noRecipesLayout.setVisibility(View.VISIBLE);
+            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
+        binding.recipesLayout.setVisibility(View.VISIBLE);
 
         binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
         String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "

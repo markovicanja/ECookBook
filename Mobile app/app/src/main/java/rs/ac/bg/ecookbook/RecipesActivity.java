@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +65,14 @@ public class RecipesActivity extends AppCompatActivity implements ServiceSetter 
     }
 
     private void setContent() {
-        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
+        if(recipeModels.isEmpty()) {
+            binding.noRecipesLayout.setVisibility(View.VISIBLE);
+            binding.recipeLayout.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
+        binding.recipeLayout.setVisibility(View.VISIBLE);
 
         binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
         String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
