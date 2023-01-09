@@ -2,8 +2,8 @@ package rs.ac.bg.ecookbook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,14 +14,16 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import rs.ac.bg.ecookbook.databinding.ActivityProfileBinding;
 import rs.ac.bg.ecookbook.databinding.ActivityUserBinding;
+import rs.ac.bg.ecookbook.models.RecipeModel;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity implements ServiceSetter {
 
     private ActivityUserBinding binding;
     private int index;
-    private ArrayList<Recipe> recipes;
+
+    private boolean mIsFollowing = false;
+    private ArrayList<RecipeModel> recipeModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +31,11 @@ public class UserActivity extends AppCompatActivity {
         binding = ActivityUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // TODO
-        String username = "Ognjen";
+        String username = Service.getInstance().getCurrentSelectedUser().getUsername();
         binding.breadcrumb.setText("HOME / " + username.toUpperCase());
 
-        // TODO
-        recipes = getAllRecipes();
-        setContent();
+        Service.getInstance().getUserRecipes(this, Service.getInstance().getCurrentSelectedUser().getUsername());
+        Service.getInstance().getIsFollowing(this);
 
         binding.name.setOnClickListener(v -> {
             Intent explicitIntent = new Intent(this, MainActivity.class);
@@ -53,37 +53,33 @@ public class UserActivity extends AppCompatActivity {
         });
 
         binding.followButton.setOnClickListener(v -> {
-            // TODO
-            binding.followButton.setVisibility(View.INVISIBLE);
-            binding.unfollowButton.setVisibility(View.VISIBLE);
+            Service.getInstance().setIsFollowing(this);
         });
 
         binding.unfollowButton.setOnClickListener(v -> {
-            // TODO
-            binding.unfollowButton.setVisibility(View.INVISIBLE);
-            binding.followButton.setVisibility(View.VISIBLE);
+            Service.getInstance().unfollow(this);
         });
 
         binding.arrowLeft.setOnClickListener(v -> {
-            if (index == 0) index = recipes.size() - 1;
+            if (index == 0) index = recipeModels.size() - 1;
             else index--;
             setContent();
         });
 
         binding.arrowRight.setOnClickListener(v -> {
-            if (index == recipes.size() - 1) index = 0;
+            if (index == recipeModels.size() - 1) index = 0;
             else index++;
             setContent();
         });
 
         binding.recipeImage.setOnClickListener(v -> {
-            // TODO proslediti recept
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
             Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
             startActivity(explicitIntent);
         });
 
         binding.recipeDetails.setOnClickListener(v -> {
-            // TODO proslediti recept
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
             Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
             startActivity(explicitIntent);
         });
@@ -91,23 +87,13 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void setContent() {
-        binding.recipeImage.setImageDrawable(recipes.get(index).getImg1());
-        String recipeDetails = recipes.get(index).getName() + " | Difficulty: "
-                + recipes.get(index).getDifficulty() + " | Rating: "
-                + recipes.get(index).getRating();
+        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
+
+        binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
+        String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
+                + recipeModels.get(index).getDifficulty() + " | Rating: "
+                + String.format("%.1f", recipeModels.get(index).getRating());
         binding.recipeDetails.setText(recipeDetails);
-    }
-
-    private ArrayList<Recipe> getAllRecipes() {
-        ArrayList<Recipe> recipes = new ArrayList();
-
-        // TODO
-        Recipe r = Recipe.createFromResources(getResources(), 1);
-        recipes.add(r);
-        r = Recipe.createFromResources(getResources(), 2);
-        recipes.add(r);
-
-        return recipes;
     }
 
     @Override
@@ -153,5 +139,33 @@ public class UserActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void toggleFollowingButton(){
+        if(mIsFollowing){
+            binding.followButton.setVisibility(View.INVISIBLE);
+            binding.unfollowButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.unfollowButton.setVisibility(View.INVISIBLE);
+            binding.followButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void setRecipes(ArrayList<RecipeModel> recipeModels) {
+        this.recipeModels = recipeModels;
+        setContent();
+    }
+
+    @Override
+    public void setIsFollowing(boolean isFollowing){
+        mIsFollowing = isFollowing;
+        toggleFollowingButton();
     }
 }

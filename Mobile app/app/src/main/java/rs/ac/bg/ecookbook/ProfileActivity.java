@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,14 +15,16 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import rs.ac.bg.ecookbook.databinding.ActivityAddRecipeBinding;
 import rs.ac.bg.ecookbook.databinding.ActivityProfileBinding;
+import rs.ac.bg.ecookbook.models.RecipeModel;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
 
     private ActivityProfileBinding binding;
     private int index;
-    private ArrayList<Recipe> recipes;
+
+    private ArrayList<RecipeModel> recipeModels; // pointer
+    private ArrayList<RecipeModel> userRecipes, savedRecipes, recommendedRecipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +32,15 @@ public class ProfileActivity extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // TODO
-        String username = "Anja";
+        String username = Service.getInstance().getLoggedUser().getUsername();
         binding.breadcrumb.setText("HOME / " + username.toUpperCase());
 
-        recipes = getAllRecipes();
-        setContent();
+        Service.getInstance().getUserRecipes(this, Service.getInstance().getLoggedUser().getUsername());
+        Service.getInstance().getAllSavedRecipes(this);
+        Service.getInstance().getAllRecommendedRecipes(this);
+        Service.getInstance().getFollowings(this);
+
         binding.followingLayout.setVisibility(View.INVISIBLE);
-
-        // TODO
-        ArrayList<User> followingUsers = new ArrayList<>();
-        followingUsers.add(User.createFromResources(getResources(), 2));
-        followingUsers.add(User.createFromResources(getResources(), 1));
-
-        FollowingAdapter followingAdapter = new FollowingAdapter(followingUsers);
-
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setAdapter(followingAdapter);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         binding.name.setOnClickListener(v -> {
             Intent explicitIntent = new Intent(this, MainActivity.class);
@@ -64,7 +58,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.myRecipesButton.setOnClickListener(v -> {
-            // TODO
+            index = 0;
+            this.recipeModels = userRecipes;
+            setContent();
+
             resetButtonColors();
             binding.myRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
             binding.recipesLayout.setVisibility(View.VISIBLE);
@@ -72,7 +69,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.savedRecipesButton.setOnClickListener(v -> {
-            // TODO
+            index = 0;
+            this.recipeModels = savedRecipes;
+            setContent();
+
             resetButtonColors();
             binding.savedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
             binding.recipesLayout.setVisibility(View.VISIBLE);
@@ -80,7 +80,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.recommendedRecipesButton.setOnClickListener(v -> {
-            // TODO
+            index = 0;
+            this.recipeModels = recommendedRecipes;
+            setContent();
+
             resetButtonColors();
             binding.recommendedRecipesButton.setBackgroundColor(getResources().getColor(R.color.green));
             binding.recipesLayout.setVisibility(View.VISIBLE);
@@ -88,7 +91,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.followingButton.setOnClickListener(v -> {
-            // TODO
             resetButtonColors();
             binding.followingButton.setBackgroundColor(getResources().getColor(R.color.green));
             binding.recipesLayout.setVisibility(View.INVISIBLE);
@@ -96,25 +98,25 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.arrowLeft.setOnClickListener(v -> {
-            if (index == 0) index = recipes.size() - 1;
+            if (index == 0) index = recipeModels.size() - 1;
             else index--;
             setContent();
         });
 
         binding.arrowRight.setOnClickListener(v -> {
-            if (index == recipes.size() - 1) index = 0;
+            if (index == recipeModels.size() - 1) index = 0;
             else index++;
             setContent();
         });
 
         binding.recipeImage.setOnClickListener(v -> {
-            // TODO proslediti recept
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
             Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
             startActivity(explicitIntent);
         });
 
         binding.recipeDetails.setOnClickListener(v -> {
-            // TODO proslediti recept
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
             Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
             startActivity(explicitIntent);
         });
@@ -122,23 +124,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setContent() {
-        binding.recipeImage.setImageDrawable(recipes.get(index).getImg1());
-        String recipeDetails = recipes.get(index).getName() + " | Difficulty: "
-                + recipes.get(index).getDifficulty() + " | Rating: "
-                + recipes.get(index).getRating();
+        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
+
+        binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
+        String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
+                + recipeModels.get(index).getDifficulty() + " | Rating: "
+                + String.format("%.1f", recipeModels.get(index).getRating());
         binding.recipeDetails.setText(recipeDetails);
-    }
-
-    private ArrayList<Recipe> getAllRecipes() {
-        ArrayList<Recipe> recipes = new ArrayList();
-
-        // TODO
-        Recipe r = Recipe.createFromResources(getResources(), 1);
-        recipes.add(r);
-        r = Recipe.createFromResources(getResources(), 2);
-        recipes.add(r);
-
-        return recipes;
     }
 
     private void resetButtonColors() {
@@ -189,5 +181,36 @@ public class ProfileActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void setRecipes(ArrayList<RecipeModel> userRecipes) {
+        this.userRecipes = userRecipes;
+        this.recipeModels = userRecipes;
+        setContent();
+    }
+
+    @Override
+    public void setSavedRecipes(ArrayList<RecipeModel> savedRecipes) {
+        this.savedRecipes = savedRecipes;
+    }
+
+    @Override
+    public void setRecommendedRecipes(ArrayList<RecipeModel> recommendedRecipes) {
+        this.recommendedRecipes = recommendedRecipes;
+    }
+
+    @Override
+    public void setFollowings(ArrayList<String> followings){
+        FollowingAdapter mFollowingAdapter = new FollowingAdapter(followings);
+
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setAdapter(mFollowingAdapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

@@ -1,12 +1,12 @@
-package rs.ac.bg.ecookbook;
+package rs.ac.bg.ecookbook.models;
 
-public class Comment {
+public class CommentModel {
     String author;
     String date;
     String time;
     String body;
 
-    public Comment(String author, String date, String time, String body) {
+    public CommentModel(String author, String date, String time, String body) {
         this.author = author;
         this.date = date;
         this.time = time;

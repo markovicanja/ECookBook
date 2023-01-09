@@ -1,7 +1,9 @@
 package rs.ac.bg.ecookbook;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,12 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import rs.ac.bg.ecookbook.databinding.ViewHolderCommentBinding;
+import rs.ac.bg.ecookbook.models.CommentModel;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
-    private final List<Comment> comments;
+    private List<CommentModel> comments;
 
-    public CommentAdapter(List<Comment> comments) {
+    public List<CommentModel> getComments(){
+        return comments;
+    }
+
+    public CommentAdapter(List<CommentModel> comments) {
         this.comments = comments;
     }
 
@@ -32,7 +39,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        Comment comment = comments.get(position);
+        CommentModel comment = comments.get(position);
         ViewHolderCommentBinding binding = holder.binding;
 
         binding.commentAuthor.setText(comment.getAuthor());
@@ -45,25 +52,34 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return comments.size();
     }
 
-    public class CommentViewHolder extends RecyclerView.ViewHolder {
+    public class CommentViewHolder extends RecyclerView.ViewHolder implements ServiceSetter {
 
         public ViewHolderCommentBinding binding;
+        private Context context;
 
         public CommentViewHolder(@NonNull ViewHolderCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
-            binding.userImage.setOnClickListener(v -> {
-                // TODO - proslediti korisnika
-                Intent intent = new Intent(v.getContext(), UserActivity.class);
-                v.getContext().startActivity(intent);
-            });
+            binding.userImage.setOnClickListener(this::startUserActivity);
 
-            binding.commentAuthor.setOnClickListener(v -> {
-                // TODO - proslediti korisnika
-                Intent intent = new Intent(v.getContext(), UserActivity.class);
-                v.getContext().startActivity(intent);
-            });
+            binding.commentAuthor.setOnClickListener(this::startUserActivity);
+        }
+
+        private void startUserActivity(View v){
+            context = v.getContext();
+            Service.getInstance().findUser(this, binding.commentAuthor.getText().toString());
+        }
+
+        @Override
+        public void userFound(){
+            Intent intent = new Intent(context, UserActivity.class);
+            context.startActivity(intent);
+        }
+
+        @Override
+        public Context getContext(){
+            return context;
         }
     }
 

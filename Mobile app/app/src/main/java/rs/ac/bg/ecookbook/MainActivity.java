@@ -33,7 +33,16 @@ public class MainActivity extends AppCompatActivity implements ServiceSetter{
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Service.getInstance().downloadImages(this);
+
         sharedPreferences = getSharedPreferences("SP", 0);
+        if (sharedPreferences.getBoolean("logged", false)) {
+            String username = sharedPreferences.getString("username", "");
+            String password = sharedPreferences.getString("password", "");
+            String email = sharedPreferences.getString("email", "");
+
+            Service.getInstance().loginUser(new UserModel(username, password, email));
+        }
 
         binding.loginButton.setOnClickListener(v -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -165,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements ServiceSetter{
     public void setUserModel(UserModel userModel){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("logged", true);
+        editor.putString("username", userModel.getUsername());
+        editor.putString("password", userModel.getPassword());
+        editor.putString("email", userModel.getEmail());
         editor.apply();
 
         invalidateOptionsMenu();

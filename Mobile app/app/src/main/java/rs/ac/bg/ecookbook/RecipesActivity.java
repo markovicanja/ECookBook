@@ -3,23 +3,50 @@ package rs.ac.bg.ecookbook;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
-import rs.ac.bg.ecookbook.databinding.ActivityRecipesBinding;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.function.Predicate;
 
-public class RecipesActivity extends AppCompatActivity {
+import rs.ac.bg.ecookbook.databinding.ActivityRecipesBinding;
+import rs.ac.bg.ecookbook.models.RecipeModel;
+
+public class RecipesActivity extends AppCompatActivity implements ServiceSetter {
+
+    private enum Categories{
+        ALL, BREAKFAST, DINNER, DESSERT, SALAD
+    }
+
+    private static final HashMap<Integer, String> SORTLIST;
+    static{
+        SORTLIST = new HashMap<>();
+        SORTLIST.put(0, "Difficulty asc");
+        SORTLIST.put(1, "Difficulty desc");
+        SORTLIST.put(2, "Rating asc");
+        SORTLIST.put(3, "Rating desc");
+    }
 
     private ActivityRecipesBinding binding;
     private SharedPreferences sharedPreferences;
+
+    private CharSequence searchedQuery;
+    private Categories currentCategory;
+    private int sortListIndex;
+    private ArrayList<RecipeModel> allRecipes, recipeModels;
+
     private int index;
-    private ArrayList<Recipe> recipes;
-    public int NUMBER_OF_RECIPES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,99 +54,23 @@ public class RecipesActivity extends AppCompatActivity {
         binding = ActivityRecipesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        NUMBER_OF_RECIPES = getResources().getInteger(R.integer.number_of_recipes);
-        recipes = getAllRecipes();
-        setContent();
-
         sharedPreferences = getSharedPreferences("SP", 0);
-
-        binding.name.setOnClickListener(v -> {
-            Intent explicitIntent = new Intent(this, MainActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        binding.logo.setOnClickListener(v -> {
-            Intent explicitIntent = new Intent(this, MainActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        binding.breadcrumb.setOnClickListener(v -> {
-            Intent explicitIntent = new Intent(this, MainActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        initSortList();
-
-        binding.allButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.allButton.setBackgroundColor(getResources().getColor(R.color.green));
-        });
-
-        binding.breakfastButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.breakfastButton.setBackgroundColor(getResources().getColor(R.color.green));
-        });
-
-        binding.dinnerButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.dinnerButton.setBackgroundColor(getResources().getColor(R.color.green));
-        });
-
-        binding.dessertButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.dessertButton.setBackgroundColor(getResources().getColor(R.color.green));
-        });
-
-        binding.saladButton.setOnClickListener(v -> {
-            // TODO
-            resetButtonColors();
-            binding.saladButton.setBackgroundColor(getResources().getColor(R.color.green));
-        });
-
-        binding.arrowLeft.setOnClickListener(v -> {
-            if (index == 0) index = recipes.size() - 1;
-            else index--;
-            setContent();
-        });
-
-        binding.arrowRight.setOnClickListener(v -> {
-            if (index == recipes.size() - 1) index = 0;
-            else index++;
-            setContent();
-        });
-
-        binding.recipeImage.setOnClickListener(v -> {
-            // TODO proslediti recept
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        binding.recipeDetails.setOnClickListener(v -> {
-            // TODO proslediti recept
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
+        if(sharedPreferences.getBoolean("logged", false)){
+            Service.getInstance().getAllRecipesByVisibility(this);
+        }
+        else{
+            Service.getInstance().getAllRecipes(this);
+        }
     }
 
     private void setContent() {
-        binding.recipeImage.setImageDrawable(recipes.get(index).getImg1());
-        String recipeDetails = recipes.get(index).getName() + " | Difficulty: "
-                + recipes.get(index).getDifficulty() + " | Rating: "
-                + recipes.get(index).getRating();
-        binding.recipeDetails.setText(recipeDetails);
-    }
+        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
 
-    private ArrayList<Recipe> getAllRecipes() {
-        ArrayList<Recipe> recipes = new ArrayList();
-        for (int i = 0; i < NUMBER_OF_RECIPES; i++) {
-            Recipe r = Recipe.createFromResources(getResources(), i);
-            recipes.add(r);
-        }
-        return recipes;
+        binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
+        String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
+                + recipeModels.get(index).getDifficulty() + " | Rating: "
+                + String.format("%.1f", recipeModels.get(index).getRating());
+        binding.recipeDetails.setText(recipeDetails);
     }
 
     private void resetButtonColors() {
@@ -130,18 +81,37 @@ public class RecipesActivity extends AppCompatActivity {
         binding.saladButton.setBackgroundColor(getResources().getColor(R.color.orange));
     }
 
+    private void initSearch(){
+        binding.searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchedQuery = charSequence.toString().toLowerCase();
+                populateRecipes();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+    }
+
     private void initSortList() {
         ArrayList<String> sortList = new ArrayList<>();
-        sortList.add("Difficulty asc");
-        sortList.add("Difficulty desc");
-        sortList.add("Rating asc");
-        sortList.add("Rating desc");
+        for(int i = 0; i < SORTLIST.size(); i++){
+            sortList.add(SORTLIST.get(i));
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter(RecipesActivity.this,
                 android.R.layout.simple_spinner_item,
                 sortList);
 
         binding.sortText.setAdapter(adapter);
+        binding.sortText.setOnItemClickListener((adapterView, view, j, l) -> {
+            sortListIndex = j;
+            populateRecipes();
+        });
     }
 
     @Override
@@ -206,5 +176,163 @@ public class RecipesActivity extends AppCompatActivity {
                     return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    private void populateRecipes(){
+        search();
+        sortByCategory();
+        sortByNum();
+        index = 0;
+
+        setContent();
+    }
+
+    private void search(){
+        this.recipeModels = new ArrayList<>();
+        if(searchedQuery.toString().equals("")){
+            this.recipeModels.addAll(this.allRecipes);
+        }
+        else {
+            for (int ind = 0; ind < allRecipes.size(); ind++) {
+                String stringToLower = allRecipes.get(ind).getName().toLowerCase();
+                if (stringToLower.contains(searchedQuery)) {
+                    recipeModels.add(allRecipes.get(ind));
+                }
+            }
+        }
+    }
+
+    private void sortByCategory(){
+        String category = "";
+        switch (currentCategory){
+            case ALL:
+                return;
+            case BREAKFAST:
+                category = "Breakfast";
+                break;
+            case DINNER:
+                category = "Dinner";
+                break;
+            case DESSERT:
+                category = "Dessert";
+                break;
+            case SALAD:
+                category = "Salad";
+                break;
+        }
+        for(int i = 0; i < recipeModels.size(); i++){
+            if(!recipeModels.get(i).getCategory().equals(category)) {
+                recipeModels.remove(i--);
+            }
+        }
+    }
+
+    private void sortByNum(){
+        if(sortListIndex == -1) return;
+        switch(sortListIndex){
+            case 0:
+                Collections.sort(recipeModels, (recipeModel, t1) -> recipeModel.getDifficulty() - t1.getDifficulty());
+                break;
+            case 1:
+                Collections.sort(recipeModels, (recipeModel, t1) -> t1.getDifficulty() - recipeModel.getDifficulty());
+                break;
+            case 2:
+                Collections.sort(recipeModels, (recipeModel, t1) -> (int)(recipeModel.getRating() - t1.getRating()));
+                break;
+            case 3:
+                Collections.sort(recipeModels, (recipeModel, t1) -> (int)(t1.getRating() - recipeModel.getRating()));
+                break;
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void setRecipes(ArrayList<RecipeModel> recipes) {
+        this.allRecipes = recipes;
+        searchedQuery = "";
+        currentCategory = Categories.ALL;
+        sortListIndex = -1;
+        populateRecipes();
+
+        binding.name.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        binding.logo.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        binding.breadcrumb.setOnClickListener(v -> {
+            Intent explicitIntent = new Intent(this, MainActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        initSearch();
+        initSortList();
+
+        binding.allButton.setOnClickListener(v -> {
+            currentCategory = Categories.ALL;
+            populateRecipes();
+            resetButtonColors();
+            binding.allButton.setBackgroundColor(getResources().getColor(R.color.green));
+        });
+
+        binding.breakfastButton.setOnClickListener(v -> {
+            currentCategory = Categories.BREAKFAST;
+            populateRecipes();
+            resetButtonColors();
+            binding.breakfastButton.setBackgroundColor(getResources().getColor(R.color.green));
+        });
+
+        binding.dinnerButton.setOnClickListener(v -> {
+            currentCategory = Categories.DINNER;
+            populateRecipes();
+            resetButtonColors();
+            binding.dinnerButton.setBackgroundColor(getResources().getColor(R.color.green));
+        });
+
+        binding.dessertButton.setOnClickListener(v -> {
+            currentCategory = Categories.DESSERT;
+            populateRecipes();
+            resetButtonColors();
+            binding.dessertButton.setBackgroundColor(getResources().getColor(R.color.green));
+        });
+
+        binding.saladButton.setOnClickListener(v -> {
+            currentCategory = Categories.SALAD;
+            populateRecipes();
+            resetButtonColors();
+            binding.saladButton.setBackgroundColor(getResources().getColor(R.color.green));
+        });
+
+        binding.arrowLeft.setOnClickListener(v -> {
+            if (index == 0) index = recipeModels.size() - 1;
+            else index--;
+            setContent();
+        });
+
+        binding.arrowRight.setOnClickListener(v -> {
+            if (index == recipeModels.size() - 1) index = 0;
+            else index++;
+            setContent();
+        });
+
+        binding.recipeImage.setOnClickListener(v -> {
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
+            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
+            startActivity(explicitIntent);
+        });
+
+        binding.recipeDetails.setOnClickListener(v -> {
+            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
+            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
+            startActivity(explicitIntent);
+        });
     }
 }

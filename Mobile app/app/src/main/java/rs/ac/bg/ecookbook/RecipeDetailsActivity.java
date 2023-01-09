@@ -5,9 +5,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,17 +18,35 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.RadioGroup;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
-import rs.ac.bg.ecookbook.databinding.ActivityProfileBinding;
 import rs.ac.bg.ecookbook.databinding.ActivityRecipeDetailsBinding;
+import rs.ac.bg.ecookbook.models.CommentModel;
+import rs.ac.bg.ecookbook.models.RecipeModel;
 
-public class RecipeDetailsActivity extends AppCompatActivity {
+public class RecipeDetailsActivity extends AppCompatActivity implements ServiceSetter {
 
     private ActivityRecipeDetailsBinding binding;
-    private int rating;
+    private RecipeModel mRecipe;
+    private CommentAdapter mCommentAdapter;
+
+    private boolean alreadySaved = false;
+    private ArrayList<String> mFollowings;
+
+    private void toggleSaveRemoveButton() {
+        if(alreadySaved){
+            binding.saveButton.setText("SAVE");
+        }
+        else{
+            binding.saveButton.setText("REMOVE");
+        }
+        alreadySaved = !alreadySaved;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +72,26 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         });
 
         binding.buttonAddComment.setOnClickListener(v -> {
-            // TODO
+            Editable editable = Objects.requireNonNull(binding.addComment.getEditText()).getText();
+            String commentBody = editable.toString();
+            if("".equals(commentBody)) return;
+
+            DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime time = LocalDateTime.now();
+            String dateString = formatterDate.format(time);
+            String timeString = formatterTime.format(time);
+
+            Service.getInstance().addComment(this, mRecipe.getName(), Service.getInstance().getLoggedUser().getUsername(), dateString, timeString, commentBody);
         });
 
         binding.saveButton.setOnClickListener(v -> {
-            // TODO
+            if(alreadySaved){
+                Service.getInstance().removeSavedRecipe(this, mRecipe.getName());
+            }
+            else{
+                Service.getInstance().saveRecipe(this, mRecipe.getName());
+            }
         });
 
         binding.recommendButton.setOnClickListener(v -> {
@@ -74,35 +109,48 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
             recommendButton.setOnClickListener(l -> {
                 String username = usernameText.getText().toString();
-
-                // TODO
-
+                for (String user: mFollowings) {
+                    if(username.equals(user)){
+                        Service.getInstance().recommendRecipe(this, Service.getInstance().getLoggedUser().getUsername(), user, mRecipe.getName());
+                        break;
+                    }
+                }
                 dialog.dismiss();
             });
 
             dialog.show();
         });
 
-        binding.visibilityButton.setOnClickListener(v -> {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.visibility_modal, null);
+        if(Service.getInstance().getLoggedUser().getUsername().equals(mRecipe.getAuthor())) {
+            binding.visibilityButton.setOnClickListener(v -> {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.visibility_modal, null);
 
-            alert.setView(view);
+                alert.setView(view);
 
-            AlertDialog dialog = alert.create();
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                AlertDialog dialog = alert.create();
+                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-            Button changeVisibilityButton = view.findViewById(R.id.change_visibility_button);
+                Button changeVisibilityButton = view.findViewById(R.id.change_visibility_button);
 
-            changeVisibilityButton.setOnClickListener(l -> {
-                // TODO
+                changeVisibilityButton.setOnClickListener(l -> {
+                    RadioGroup radioButtonGroup = view.findViewById(R.id.radioGroup);
+                    int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
+                    View radioButton = radioButtonGroup.findViewById(radioButtonID);
+                    int visibility = radioButtonGroup.indexOfChild(radioButton);
 
-                dialog.dismiss();
+                    Service.getInstance().changeVisiblity(this, mRecipe.getName(), visibility);
+
+                    dialog.dismiss();
+                });
+
+                dialog.show();
             });
-
-            dialog.show();
-        });
+        }
+        else{
+            binding.visibilityButton.setEnabled(false);
+        }
 
         binding.star1.setOnClickListener(v -> {
             binding.star1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_24, 0, 0, 0);
@@ -111,16 +159,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             binding.star4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
             binding.star5.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
 
-            if (rating > 1) {
-                rating -= 1;
-            }
-            else if (rating < 1) {
-                rating += 1;
-            }
-
-            binding.ratingText.setText("Rating: " + rating);
-            // TODO
-            // update rating
+            Service.getInstance().rateRecipe(this, mRecipe.getName(), 1);
         });
 
         binding.star2.setOnClickListener(v -> {
@@ -130,16 +169,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             binding.star4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
             binding.star5.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
 
-            if (rating > 2) {
-                rating -= 1;
-            }
-            else if (rating < 2) {
-                rating += 1;
-            }
-
-            binding.ratingText.setText("Rating: " + rating);
-            // TODO
-            // update rating
+            Service.getInstance().rateRecipe(this, mRecipe.getName(), 2);
         });
 
         binding.star3.setOnClickListener(v -> {
@@ -149,16 +179,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             binding.star4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
             binding.star5.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
 
-            if (rating > 3) {
-                rating -= 1;
-            }
-            else if (rating < 3) {
-                rating += 1;
-            }
-
-            binding.ratingText.setText("Rating: " + rating);
-            // TODO
-            // update rating
+            Service.getInstance().rateRecipe(this, mRecipe.getName(), 3);
         });
 
         binding.star4.setOnClickListener(v -> {
@@ -168,16 +189,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             binding.star4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_24, 0, 0, 0);
             binding.star5.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_outline_24, 0, 0, 0);
 
-            if (rating > 4) {
-                rating -= 1;
-            }
-            else if (rating < 4) {
-                rating += 1;
-            }
-
-            binding.ratingText.setText("Rating: " + rating);
-            // TODO
-            // update rating
+            Service.getInstance().rateRecipe(this, mRecipe.getName(), 4);
         });
 
         binding.star5.setOnClickListener(v -> {
@@ -187,41 +199,27 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             binding.star4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_24, 0, 0, 0);
             binding.star5.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_star_24, 0, 0, 0);
 
-            if (rating < 5) {
-                rating += 1;
-            }
-
-            binding.ratingText.setText("Rating: " + rating);
-            // TODO
-            // update rating
+            Service.getInstance().rateRecipe(this, mRecipe.getName(), 5);
         });
     }
 
     public void setContent() {
-        // TODO
-        Recipe recipe = Recipe.createFromResources(getResources(), 1);
-        rating = recipe.getRating();
-        binding.breadcrumb.setText("HOME / RECIPES / " + recipe.getName().toUpperCase());
+        mRecipe = Service.getInstance().getCurrentRecipe();
 
-        binding.textHeading.setText(recipe.getName());
-        binding.recipeDetails.setText(recipe.getDescription());
-        binding.img1.setImageDrawable(recipe.getImg1());
-        binding.img2.setImageDrawable(recipe.getImg2());
-        binding.img3.setImageDrawable(recipe.getImg3());
-        binding.authorText.setText("Author: " + recipe.getAuthor());
-        binding.difficultyText.setText("Difficulty: " + recipe.getDifficulty());
-        binding.ratingText.setText("Rating: " + recipe.getRating());
+        binding.breadcrumb.setText("HOME / RECIPES / " + mRecipe.getName().toUpperCase());
 
-        // TODO
-        ArrayList<Comment> comments = new ArrayList<>();
-        comments.add(new Comment("Nina", "19/12/2022", "18:07", "Favourite recipe"));
-        comments.add(new Comment("Ogi", "10/2/2022", "20:12", "My go to christmas recipe!"));
+        binding.textHeading.setText(mRecipe.getName());
+        binding.recipeDetails.setText(mRecipe.getDescription());
+        binding.img1.setImageDrawable(mRecipe.getImg1());
+        binding.img2.setImageDrawable(mRecipe.getImg2());
+        binding.img3.setImageDrawable(mRecipe.getImg3());
+        binding.authorText.setText("Author: " + mRecipe.getAuthor());
+        binding.difficultyText.setText("Difficulty: " + mRecipe.getDifficulty());
+        binding.ratingText.setText("Rating: " + String.format("%.1f", mRecipe.getRating()));
 
-        CommentAdapter commentAdapter = new CommentAdapter(comments);
-
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setAdapter(commentAdapter);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Service.getInstance().getComments(this, mRecipe.getName());
+        Service.getInstance().getFollowings(this);
+        Service.getInstance().findIfUserSavedRecipe(this, mRecipe.getName());
     }
 
     @Override
@@ -267,5 +265,57 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void setComments(ArrayList<CommentModel> comments) {
+        mCommentAdapter = new CommentAdapter(comments);
+
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setAdapter(mCommentAdapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public void setRating(double rating){
+        mRecipe.setRating(rating);
+        binding.ratingText.setText("Rating: " + String.format("%.1f", mRecipe.getRating()));
+    }
+
+    @Override
+    public void setFollowings(ArrayList<String> followings){
+        mFollowings = followings;
+    }
+
+    @Override
+    public void setUserSavedRecipe(){
+        toggleSaveRemoveButton();
+    }
+
+    @Override
+    public void saveRecipe(){
+        toggleSaveRemoveButton();
+    }
+
+    @Override
+    public void removeSavedRecipe(){
+        toggleSaveRemoveButton();
+    }
+
+    @Override
+    public void addComment(String author, String date, String time, String body){
+        CommentModel commentModel = new CommentModel(author, date, time, body);
+        mCommentAdapter.getComments().add(commentModel);
+        mCommentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setRecipeVisibility(int visibility){
+        mRecipe.setVisibility(visibility);
     }
 }

@@ -1,5 +1,6 @@
 package rs.ac.bg.ecookbook;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -13,9 +14,9 @@ import rs.ac.bg.ecookbook.databinding.ViewHolderFollowingBinding;
 
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.FollowingViewHolder> {
 
-    private final List<User> users;
+    private final List<String> users;
 
-    public FollowingAdapter(List<User> users) {
+    public FollowingAdapter(List<String> users) {
         this.users = users;
     }
 
@@ -32,10 +33,10 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
 
     @Override
     public void onBindViewHolder(@NonNull FollowingViewHolder holder, int position) {
-        User following = users.get(position);
+        String following = users.get(position);
         ViewHolderFollowingBinding binding = holder.binding;
 
-        binding.username.setText(following.getUsername());
+        binding.username.setText(following);
     }
 
     @Override
@@ -43,18 +44,30 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
         return users.size();
     }
 
-    public class FollowingViewHolder extends RecyclerView.ViewHolder {
+    public class FollowingViewHolder extends RecyclerView.ViewHolder implements ServiceSetter {
 
         public ViewHolderFollowingBinding binding;
+        private Context context;
 
         public FollowingViewHolder(@NonNull ViewHolderFollowingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
             binding.username.setOnClickListener(v -> {
-                Intent intent = new Intent(v.getContext(), UserActivity.class);
-                v.getContext().startActivity(intent);
+                context = v.getContext();
+                Service.getInstance().findUser(this, binding.username.getText().toString());
             });
+        }
+
+        @Override
+        public void userFound(){
+            Intent intent = new Intent(context, UserActivity.class);
+            context.startActivity(intent);
+        }
+
+        @Override
+        public Context getContext(){
+            return context;
         }
     }
 
