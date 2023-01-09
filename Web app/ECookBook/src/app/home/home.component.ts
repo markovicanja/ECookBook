@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '../model/user.model';
 import { ServiceService } from '../service.service';
 
 @Component({
@@ -19,9 +20,17 @@ export class HomeComponent implements OnInit {
 
   errorMsg: string;
 
+  loggedUser: User | null;
+
   ngOnInit(): void {
     if (JSON.parse(localStorage.getItem("user")!) != null) {
       this.router.navigate(["home"]);
+    }
+    if (localStorage.getItem("user") != null) {
+      this.loggedUser = JSON.parse(localStorage.getItem("user")!);
+    }
+    else {
+      this.loggedUser = null;
     }
     
     this.username = "";

@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements ServiceSetter{
             String email = sharedPreferences.getString("email", "");
 
             Service.getInstance().loginUser(new UserModel(username, password, email));
+            binding.loginButton.setVisibility(View.VISIBLE);
+            binding.registerButton.setVisibility(View.VISIBLE);
         }
 
         binding.loginButton.setOnClickListener(v -> {
@@ -147,6 +149,10 @@ public class MainActivity extends AppCompatActivity implements ServiceSetter{
                     editor.putBoolean("logged", false);
                     editor.apply();
                     invalidateOptionsMenu();
+
+                    binding.loginButton.setVisibility(View.VISIBLE);
+                    binding.registerButton.setVisibility(View.VISIBLE);
+
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -178,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements ServiceSetter{
         editor.putString("password", userModel.getPassword());
         editor.putString("email", userModel.getEmail());
         editor.apply();
+
+        binding.loginButton.setVisibility(View.INVISIBLE);
+        binding.registerButton.setVisibility(View.INVISIBLE);
 
         invalidateOptionsMenu();
     }
