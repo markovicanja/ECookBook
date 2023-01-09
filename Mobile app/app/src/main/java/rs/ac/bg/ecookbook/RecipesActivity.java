@@ -155,6 +155,8 @@ public class RecipesActivity extends AppCompatActivity implements ServiceSetter 
                     editor.putBoolean("logged", false);
                     editor.apply();
                     invalidateOptionsMenu();
+                    explicitIntent = new Intent(this, MainActivity.class);
+                    startActivity(explicitIntent);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
