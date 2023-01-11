@@ -140,13 +140,13 @@ export class RecipeComponent implements OnInit {
   recommend() {
     this.recommendErrorMsg = "";
     if(!this.followings.includes(this.username)){
-      this.recommendErrorMsg = "Niste uneli dobar username.";
+      this.recommendErrorMsg = "Username can't be identified.";
       return;
     }
     
     this.service.recommendRecipe(this.user.username, this.username, this.recipe.name).subscribe(res => {
       if(res["status"] == 1){
-        this.recommendErrorMsg = "Uspesno ste preporucili recept.";
+        this.recommendErrorMsg = "Recipe has been recommended successfully.";
       }
     })
   }

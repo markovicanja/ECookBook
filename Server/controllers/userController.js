@@ -29,7 +29,7 @@ class UserController{
                 if (err) res.json({status: 0, poruka: err});
                 else{
                     if(user) res.json({status: 1, poruka: user});
-                    else res.json({status: 0, poruka: "Neispravni kredencijali."});
+                    else res.json({status: 0, poruka: "Wrong credentials."});
                 }
             });
         });
@@ -44,13 +44,19 @@ class UserController{
                     user.find({ 'email' : email }, (err, users) => {
                         if (users.length == 0){
                             user.collection.insertOne({ 'username' : username, 'email': email, 'password' : password });
-                            res.json({status: 1, poruka: "Uspesno ste se registrovali."});
+                            res.json({status: 1, poruka: "Registration successful."});
                         }
-                        else res.json({status: 0, poruka: "Korisnik sa unetim mejlom vec postoji."});
+                        else res.json({status: 0, poruka: "User with that email already exists."});
                     });
                 }
-                else res.json({status: 0, poruka: "Korisnik sa unetim korisnickim imenom vec postoji."});
+                else res.json({status: 0, poruka: "User with that username already exists."});
             });
+        });
+
+        router.route('/getAllImagesNames').get((req, res) => {
+            const fs = require('fs');
+            const files = fs.readdirSync('../../Web app/ECookBook/src/assets/recipes');
+            res.json({files: files});
         });
     }
 

@@ -34,7 +34,7 @@ class FollowingController{
             following.findOne({'username' : username, 'following' : followingVar}, (err, follow) => {
                 if (err) res.json({status: 0, poruka: err});
                 else{
-                    if(follow) res.json({status: 0, poruka: "Vec se pratite."});
+                    if(follow) res.json({status: 0, poruka: "Already following."});
                     else{
                         following.collection.insertOne({'username' : username, 'following' : followingVar});
                         res.json({status: 1, poruka: "success"});

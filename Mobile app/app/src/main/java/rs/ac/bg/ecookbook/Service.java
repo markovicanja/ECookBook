@@ -28,8 +28,8 @@ import rs.ac.bg.ecookbook.models.UserModel;
 
 public class Service {
     private static Service mInstance = null;
-    private AsyncHttpClient mClient;
-    private String mURL, mImagesURL;
+    private final AsyncHttpClient mClient;
+    private final String mURL, mImagesURL;
     private UserModel mCurrentLoggedUser;
     private UserModel mCurrentSelectedUser;
     private RecipeModel mCurrentRecipe;

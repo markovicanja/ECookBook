@@ -54,7 +54,7 @@ public class AddRecipeActivity extends AppCompatActivity implements ServiceSette
             String description = binding.descriptionText.getText().toString();
 
             if("".equals(name) || "".equals(category) || "".equals(cuisine) || "".equals(imgURL) || "".equals(description)){
-                Toast.makeText(this, "Morate popuniti sva polja.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You must fill out all the fields.", Toast.LENGTH_LONG).show();
             }
             else{
                 Service.getInstance().addRecipe(this, name, difficulty, category, cuisine, description,

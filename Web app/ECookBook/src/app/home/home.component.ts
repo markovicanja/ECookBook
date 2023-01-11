@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   login() {
     this.errorMsg = "";
     if (this.username == "" || this.password == "") {
-      this.errorMsg = "Morate popuniti sva polja.";
+      this.errorMsg = "You must fill out all the fields.";
       return;
     }
     
@@ -69,11 +69,11 @@ export class HomeComponent implements OnInit {
   register() {
     this.errorMsg = "";
     if (this.username == "" || this.email == "" || this.password == "" || this.confPassword == "") {
-      this.errorMsg = "Morate popuniti sva polja.";
+      this.errorMsg = "You must fill out all the fields.";
       return;
     }
     if (this.password != this.confPassword) {
-      this.errorMsg = "Lozinke se razlikuju.";
+      this.errorMsg = "Passwords do not match.";
       return;
     }
     this.service.registerUser(this.username, this.email, this.password).subscribe(res => {

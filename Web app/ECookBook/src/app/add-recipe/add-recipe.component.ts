@@ -41,7 +41,7 @@ export class AddRecipeComponent implements OnInit {
   submit(){
     this.error = "";
     if (this.name == "" || this.difficulty == undefined || this.cuisine == "" || this.img == "" || this.description == "") {
-      this.error = "Morate popuniti sva polja.";
+      this.error = "You must fill out all the fields.";
       return;
     }
 

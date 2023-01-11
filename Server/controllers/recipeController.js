@@ -80,9 +80,9 @@ class RecipeController{
                         'visibility' : visibility,
                         'rating' : rating
                     });
-                    res.json({status: 1, poruka: "Uspesno ste uneli recept."});
+                    res.json({status: 1, poruka: "Recipe successfully added."});
                 }
-                else res.json({status: 0, poruka: "Recept vec postoji u sistemu."});
+                else res.json({status: 0, poruka: "Recipe already exists."});
             });
         });
 
@@ -93,9 +93,9 @@ class RecipeController{
             recipe.findOne({ 'name' : name }, (err, rec) => {
                 if (rec){
                     recipe.collection.updateOne({'name' : name}, {$set: {'visibility': visibility }});
-                    res.json({status: 1, poruka: "Uspesno promenjeno!"});
+                    res.json({status: 1, poruka: "Successfully changed!"});
                 }
-                else res.json({status: 0, poruka: "Recept ne postoji u sistemu."});
+                else res.json({status: 0, poruka: "Recipe doesn't exist."});
             });
         });
 
@@ -113,7 +113,7 @@ class RecipeController{
                     recipe.collection.updateOne({'name' : name}, {$set: {'rating': newVal }});
                     res.json({status: 1, poruka: newVal});
                 }
-                else res.json({status: 0, poruka: "Recept ne postoji u sistemu."});
+                else res.json({status: 0, poruka: "Recipe doesn't exist."});
             });
         });
 
