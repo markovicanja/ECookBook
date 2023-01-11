@@ -30,6 +30,8 @@ export class UserProfileComponent implements OnInit {
       this.router.navigate(["home"]);
     }
     else this.loggedUser = JSON.parse(localStorage.getItem("user")!);
+
+    this.userRecipes = [];
     
     this.service.getUserRecipes(this.user.username).subscribe(res => {
       if(res["status"] == 1){

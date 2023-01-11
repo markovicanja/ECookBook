@@ -87,7 +87,14 @@ public class UserActivity extends AppCompatActivity implements ServiceSetter {
     }
 
     private void setContent() {
-        if(recipeModels.isEmpty()) return; // TODO - Ovde bi verovatno trebala da bude logika u slucaju da nema recepata za prikaz
+        if(recipeModels.isEmpty()) {
+            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.noRecipesLayout.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        binding.recipesLayout.setVisibility(View.VISIBLE);
+        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
 
         binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
         String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
