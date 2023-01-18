@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="sidebar-widget">
-                        <h2 class="widget-title recipe-author">Author: {{ recipe.author }}</h2>
+                        <h2 class="widget-title recipe-author" (click)="userRoute(recipe.author)">Author: {{ recipe.author }}</h2>
                         <h2 class="widget-title recipe-difficulty">Difficulty: {{ recipe.difficulty }}</h2>
                         <h2 class="widget-title recipe-mark">Rating: {{ recipe.rating | number : '0.1-1' }}</h2>
 
