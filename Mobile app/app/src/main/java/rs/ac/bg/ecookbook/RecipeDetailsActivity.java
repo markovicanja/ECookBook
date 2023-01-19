@@ -71,6 +71,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ServiceS
             startActivity(explicitIntent);
         });
 
+        binding.authorText.setOnClickListener(view -> {
+            String newString = binding.authorText.getText().toString();
+            newString = newString.substring(8);
+            Service.getInstance().findUser(this, newString);
+        });
+
         binding.buttonAddComment.setOnClickListener(v -> {
             Editable editable = Objects.requireNonNull(binding.addComment.getEditText()).getText();
             String commentBody = editable.toString();
@@ -312,6 +318,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ServiceS
         CommentModel commentModel = new CommentModel(author, date, time, body);
         mCommentAdapter.getComments().add(commentModel);
         mCommentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void userFound(){
+        Intent intent = new Intent(this, UserActivity.class);
+        startActivity(intent);
     }
 
     @Override
