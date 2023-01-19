@@ -21,7 +21,6 @@ import rs.ac.bg.ecookbook.models.RecipeModel;
 public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
 
     private ActivityProfileBinding binding;
-    private int index;
 
     private ArrayList<RecipeModel> recipeModels; // pointer
     private ArrayList<RecipeModel> userRecipes, savedRecipes, recommendedRecipes;
@@ -58,7 +57,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
         });
 
         binding.myRecipesButton.setOnClickListener(v -> {
-            index = 0;
             this.recipeModels = userRecipes;
             setContent();
 
@@ -68,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
         });
 
         binding.savedRecipesButton.setOnClickListener(v -> {
-            index = 0;
             this.recipeModels = savedRecipes;
             setContent();
 
@@ -78,7 +75,6 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
         });
 
         binding.recommendedRecipesButton.setOnClickListener(v -> {
-            index = 0;
             this.recipeModels = recommendedRecipes;
             setContent();
 
@@ -90,52 +86,27 @@ public class ProfileActivity extends AppCompatActivity implements ServiceSetter{
         binding.followingButton.setOnClickListener(v -> {
             resetButtonColors();
             binding.followingButton.setBackgroundColor(getResources().getColor(R.color.green));
-            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.scrollView.setVisibility(View.INVISIBLE);
             binding.noRecipesLayout.setVisibility(View.INVISIBLE);
             binding.followingLayout.setVisibility(View.VISIBLE);
         });
-
-        binding.arrowLeft.setOnClickListener(v -> {
-            if (index == 0) index = recipeModels.size() - 1;
-            else index--;
-            setContent();
-        });
-
-        binding.arrowRight.setOnClickListener(v -> {
-            if (index == recipeModels.size() - 1) index = 0;
-            else index++;
-            setContent();
-        });
-
-        binding.recipeImage.setOnClickListener(v -> {
-            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        binding.recipeDetails.setOnClickListener(v -> {
-            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
-
     }
 
     private void setContent() {
+        if (recipeModels == null) return;
         if(recipeModels.isEmpty()) {
             binding.noRecipesLayout.setVisibility(View.VISIBLE);
-            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.scrollView.setVisibility(View.INVISIBLE);
             return;
         }
 
-        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
-        binding.recipesLayout.setVisibility(View.VISIBLE);
+        RecipesAdapter recipesAdapter = new RecipesAdapter(recipeModels);
+        binding.recipesRecyclerView.setHasFixedSize(true);
+        binding.recipesRecyclerView.setAdapter(recipesAdapter);
+        binding.recipesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
-        String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
-                + recipeModels.get(index).getDifficulty() + " | Rating: "
-                + String.format("%.1f", recipeModels.get(index).getRating());
-        binding.recipeDetails.setText(recipeDetails);
+        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
+        binding.scrollView.setVisibility(View.VISIBLE);
     }
 
     private void resetButtonColors() {

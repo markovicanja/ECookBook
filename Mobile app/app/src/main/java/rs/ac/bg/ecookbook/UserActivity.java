@@ -2,6 +2,7 @@ package rs.ac.bg.ecookbook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -59,48 +60,22 @@ public class UserActivity extends AppCompatActivity implements ServiceSetter {
         binding.unfollowButton.setOnClickListener(v -> {
             Service.getInstance().unfollow(this);
         });
-
-        binding.arrowLeft.setOnClickListener(v -> {
-            if (index == 0) index = recipeModels.size() - 1;
-            else index--;
-            setContent();
-        });
-
-        binding.arrowRight.setOnClickListener(v -> {
-            if (index == recipeModels.size() - 1) index = 0;
-            else index++;
-            setContent();
-        });
-
-        binding.recipeImage.setOnClickListener(v -> {
-            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
-
-        binding.recipeDetails.setOnClickListener(v -> {
-            Service.getInstance().setCurrentRecipe(recipeModels.get(index));
-            Intent explicitIntent = new Intent(this, RecipeDetailsActivity.class);
-            startActivity(explicitIntent);
-        });
-
     }
 
     private void setContent() {
         if(recipeModels.isEmpty()) {
-            binding.recipesLayout.setVisibility(View.INVISIBLE);
+            binding.scrollView.setVisibility(View.INVISIBLE);
             binding.noRecipesLayout.setVisibility(View.VISIBLE);
             return;
         }
 
-        binding.recipesLayout.setVisibility(View.VISIBLE);
-        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
+        RecipesAdapter recipesAdapter = new RecipesAdapter(recipeModels);
+        binding.recipesRecyclerView.setHasFixedSize(true);
+        binding.recipesRecyclerView.setAdapter(recipesAdapter);
+        binding.recipesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.recipeImage.setImageDrawable(recipeModels.get(index).getImg1());
-        String recipeDetails = recipeModels.get(index).getName() + " | Difficulty: "
-                + recipeModels.get(index).getDifficulty() + " | Rating: "
-                + String.format("%.1f", recipeModels.get(index).getRating());
-        binding.recipeDetails.setText(recipeDetails);
+        binding.scrollView.setVisibility(View.VISIBLE);
+        binding.noRecipesLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override
