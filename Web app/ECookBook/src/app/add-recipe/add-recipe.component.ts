@@ -21,9 +21,12 @@ export class AddRecipeComponent implements OnInit {
   img: string;
   description: string;
   error: string;
+  res: number;
 
   ngOnInit(): void {
-    if (localStorage.getItem("user") == null) return;
+    if (localStorage.getItem("user") == null) {
+      return;
+    }
     else this.user = JSON.parse(localStorage.getItem("user")!);
 
     this.error = "";
@@ -33,9 +36,9 @@ export class AddRecipeComponent implements OnInit {
 
     this.name = "";
     this.category = this.categories[0];
-    this.cuisine == "";
-    this.img == "";
-    this.description == "";
+    this.cuisine = "";
+    this.img = "";
+    this.description = "";
   }
 
   submit(){
@@ -48,6 +51,7 @@ export class AddRecipeComponent implements OnInit {
     const rating = 3;
     const visibility = 0;
     this.service.addRecipe(this.name, this.difficulty, this.category, this.cuisine, this.img, this.description, this.user.username, visibility, rating).subscribe(res => {
+      this.res = res["status"];
       this.error = res["poruka"];
     });
   }

@@ -21,17 +21,23 @@ export class RecipesComponent implements OnInit {
   searchQuery: string;
 
   sorter: string;
+  msg: string;
 
   selectedCategory: string;
 
   ngOnInit(): void {
+    this.queriedRecipes = [];
+    this.allRecipes = [];
+    this.sorter = "Sort";
+    
     if (localStorage.getItem("user") == null) return;
     else this.user = JSON.parse(localStorage.getItem("user")!);
 
+    this.msg = "";
     this.searchQuery = "";
-    this.sorter = "Sort";
     this.selectedCategory = "All";
     this.service.getAllRecipesByVisibility(this.user.username).subscribe(res => {
+      this.msg = "getAllRecipesByVisibility";
       if(res["status"] == 1){
         this.allRecipes = res["poruka"];
         this.queriedRecipes = this.allRecipes;
@@ -44,9 +50,14 @@ export class RecipesComponent implements OnInit {
     this.router.navigate(["recipe"]);
   }
 
-  search(){
-    const stringToDetect = this.searchQuery.toLowerCase();
-    this.queriedRecipes = this.allRecipes.filter(recipe => recipe.name.toLowerCase().includes(stringToDetect));
+  search() {
+    let stringToDetect = "";
+    if (typeof this.searchQuery === 'string') {
+      stringToDetect = this.searchQuery.toLowerCase();
+    }
+    this.queriedRecipes = this.allRecipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(stringToDetect)
+    );
 
     this.sort();
   }
@@ -57,8 +68,11 @@ export class RecipesComponent implements OnInit {
   }
 
   sortByCat(){
-    if(this.selectedCategory !== "All"){
-      this.queriedRecipes = this.queriedRecipes.filter(recipe => recipe.category === this.selectedCategory);
+    if(this.selectedCategory !== "All") {
+      this.queriedRecipes = this.queriedRecipes.filter(recipe => 
+        recipe.category === this.selectedCategory
+      );
+      this.msg = "category sorting";
     }
   }
   

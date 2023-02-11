@@ -31,7 +31,7 @@ import { DatePipe } from '@angular/common';
     FormsModule,
     HttpClientModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

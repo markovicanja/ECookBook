@@ -33,9 +33,17 @@ export class RecipeComponent implements OnInit {
 
   isChangingVisibilityAvailable: boolean;
   visibilityMsg: string;
+  visible: number;
+
+  msg: string;
+  res: number;
 
   ngOnInit(): void {
-    if (localStorage.getItem("user") == null) return;
+    this.recipe = new Recipe;
+    if (localStorage.getItem("user") == null) {
+      this.user = new User;
+      return;
+    }
     else this.user = JSON.parse(localStorage.getItem("user")!);
 
     this.currentComment = "";
@@ -47,14 +55,18 @@ export class RecipeComponent implements OnInit {
 
     this.visibilityMsg = "";
 
+    this.msg = "";
+
     this.comments = [];
 
     if (localStorage.getItem("recipe") == null || localStorage.getItem("recipe") == "") {
+      this.recipe = new Recipe;
       this.router.navigate(["home"]);
     }
     else this.recipe = JSON.parse(localStorage.getItem("recipe")!);
 
     this.service.getComments(this.recipe.name).subscribe(res => {
+      this.msg = "get comments";
       if(res["status"] == 1){
         this.comments = (res["poruka"] as Comment[]);
       }
@@ -63,6 +75,7 @@ export class RecipeComponent implements OnInit {
     this.recommendErrorMsg = "";
     this.followings = [];
     this.service.getFollowings(this.user.username).subscribe(res => {
+      this.msg = "get followings";
       if(res["status"] == 1){
         this.followings = res["poruka"];
       }
@@ -70,6 +83,7 @@ export class RecipeComponent implements OnInit {
 
     this.saved = false;
     this.service.findIfUserSavedRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      this.msg = "findIfUserSavedRecipe";
       if(res["status"] == 1){
         this.saved = true;
       }
@@ -82,8 +96,13 @@ export class RecipeComponent implements OnInit {
   }
   
   userRoute(username: String) {
-    if(username === this.user.username) return;
+    this.msg = "";
+    if(username === this.user.username) {
+      this.msg = "failed";
+      return;
+    }
     this.service.findUser(username.toString()).subscribe(res => {
+      this.msg = "success";
       if(res["status"] == 1){
         localStorage.setItem("userProfile", JSON.stringify({'username' : res["username"], 'email' : res["email"]}))
         this.router.navigate(["userProfile"]);
@@ -115,6 +134,7 @@ export class RecipeComponent implements OnInit {
     }
     
     this.service.addComment(this.recipe.name, this.user.username, date, time, this.currentComment).subscribe(res => {
+      this.msg = "added comment";
       if(res["status"] == 1){
         let newComment = new Comment();
         newComment.recipe = this.recipe.name;
@@ -129,6 +149,7 @@ export class RecipeComponent implements OnInit {
     });
     if(rate != 0){
       this.service.rateRecipe(this.recipe.name, rate).subscribe(res => {
+        this.msg = "rate recipe";
         if(res["status"] == 1){
           this.recipe.rating = res["poruka"];
           localStorage.setItem("recipe", JSON.stringify(this.recipe));
@@ -145,6 +166,7 @@ export class RecipeComponent implements OnInit {
     }
     
     this.service.recommendRecipe(this.user.username, this.username, this.recipe.name).subscribe(res => {
+      this.res = res["status"];
       if(res["status"] == 1){
         this.recommendErrorMsg = "Recipe has been recommended successfully.";
       }
@@ -153,6 +175,7 @@ export class RecipeComponent implements OnInit {
 
   save() {
     this.service.saveRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      this.msg = "saved";
       if(res["status"] == 1){
         this.saved = true;
       }
@@ -161,6 +184,7 @@ export class RecipeComponent implements OnInit {
 
   remove() {    
     this.service.removeSavedRecipe(this.user.username, this.recipe.name).subscribe(res => {
+      this.msg = "removed";
       if(res["status"] == 1){
         this.saved = false;
       }
@@ -168,18 +192,19 @@ export class RecipeComponent implements OnInit {
   }
 
   visibility(s: String) {
-    let visibility = 0;
+    this.visible = 0;
     if(s === "everyone"){
-      visibility = 0;
+      this.visible = 0;
     } else if(s === "followers"){
-      visibility = 1;
+      this.visible = 1;
     }else if(s === "hide"){
-      visibility = 2;
+      this.visible = 2;
     }
 
-    this.service.changeVisiblity(this.recipe.name, visibility).subscribe(res => {
+    this.service.changeVisiblity(this.recipe.name, this.visible).subscribe(res => {
+      this.msg = "visibility change";
       if(res["status"] == 1){
-        this.recipe.visibility = visibility;
+        this.recipe.visibility = this.visible;
         this.visibilityMsg = res["poruka"];  
       }
     })

@@ -11,7 +11,7 @@ import { ServiceService } from './service.service';
 export class AppComponent {
   title = 'ECookBook';
 
-  constructor(private service: ServiceService, private router: Router) {
+  constructor(private service: ServiceService, public router: Router) {
   }
 
   sessionValid: boolean;

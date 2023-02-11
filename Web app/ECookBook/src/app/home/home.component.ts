@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
   confPassword: string;
 
   errorMsg: string;
+  successMsg: string;
+  res: number;
 
   loggedUser: User | null;
 
@@ -38,6 +40,7 @@ export class HomeComponent implements OnInit {
     this.password = "";
     this.confPassword = "";
     this.errorMsg = "";
+    this.successMsg = "";
   }
 
   reset() {
@@ -46,6 +49,7 @@ export class HomeComponent implements OnInit {
     this.password = "";
     this.confPassword = "";
     this.errorMsg = "";
+    this.successMsg = "";
   }
 
   login() {
@@ -56,9 +60,10 @@ export class HomeComponent implements OnInit {
     }
     
     this.service.loginUser(this.username, this.password).subscribe(res => {
+      this.res = res["status"];
       if(res["status"] == 1){
         localStorage.setItem('user', JSON.stringify(res["poruka"]));
-        window.location.reload();
+        // window.location.reload();
       }
       else if(res["status"] == 0){
         this.errorMsg = res["poruka"];
@@ -77,6 +82,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.service.registerUser(this.username, this.email, this.password).subscribe(res => {
+      this.res = res["status"];
       if(res["status"] == 1){
         this.errorMsg = res["poruka"];
       }

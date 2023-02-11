@@ -32,7 +32,7 @@ const router = express.Router();
 
 // Route methods
 controllers.forEach(element => {
-    element.defaultRecords();
+    //element.defaultRecords();
     element.routeMethods(router);
 });
 
