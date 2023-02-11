@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import { Recipe } from '../model/recipe.model';
 import { User } from '../model/user.model';
 import { keyable, ServiceService } from '../service.service';
 
@@ -22,6 +24,24 @@ describe('RecipeComponent', () => {
     })
     .compileComponents();
 
+    let user = new User;
+    user.username = "anja";
+    user.password = "123";
+    user.email = "anja@gmail.com";
+    localStorage.setItem("user", JSON.stringify(user));
+
+    let recipe = new Recipe();
+    recipe.name = "Cookies";
+    recipe.author = "anja";
+    recipe.category = "Dessert";
+    recipe.cuisine = "american";
+    recipe.description = "Yummy cookies recipe";
+    recipe.difficulty = 3;
+    recipe.img = "cookies";
+    recipe.rating = 4;
+    recipe.visibility = 1;
+    localStorage.setItem("recipe", JSON.stringify(recipe));
+
     fixture = TestBed.createComponent(RecipeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -31,6 +51,24 @@ describe('RecipeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should return', () => {
+    localStorage.clear();
+    expect(component.ngOnInit()).toBe(undefined);
+  });
+
+  it('should navigate to home', inject([Router], (mockRouter: Router) => {
+    localStorage.clear();
+    let user = new User;
+    user.username = "anja";
+    user.password = "123";
+    user.email = "anja@gmail.com";
+    localStorage.setItem("user", JSON.stringify(user));
+
+    const spy = spyOn(mockRouter, 'navigate').and.stub();
+    component.ngOnInit();
+    expect(spy.calls.first().args[0]).toContain('home');
+  }));
 
   it('should get comments', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
@@ -63,15 +101,14 @@ describe('RecipeComponent', () => {
     expect(component.msg).toBe("failed");
   });
 
-  it('should navigate', () => {
-    let res: keyable = {};
-    component.user = new User;
-    component.user.username = "anja";
+  it('should navigate to userProfile', fakeAsync(inject([Router], (mockRouter: Router) => {
+    let res = { status: 1, poruka: "" };
     spyOn(service, 'findUser').and.returnValue(of(res));
+    const spy = spyOn(mockRouter, 'navigate').and.stub();
     component.userRoute("ogi");
-    fixture.detectChanges();
-    expect(component.msg).toBe("success");
-  });
+    tick();
+    expect(spy.calls.first().args[0]).toContain('userProfile');
+  })));
 
   it('should set current rate to 1', () => {
     component.currentRate1 = "1";
@@ -147,25 +184,21 @@ describe('RecipeComponent', () => {
     expect(component.res).toBe(1);
   }));
 
-  it('should save recipe', () => {
-    let res: keyable = {};
-    component.user.username = "anja";
-    component.recipe.name = "pancakes";
+  it('should save recipe', fakeAsync(() => {
+    let res = { status: 1, poruka: "" };
     spyOn(service, 'saveRecipe').and.returnValue(of(res));
     component.save();
-    fixture.detectChanges();
-    expect(component.msg).toBe("saved");
-  });
+    tick();
+    expect(component.saved).toBe(true);
+  }));
 
-  it('should remove saved recipe', () => {
-    let res: keyable = {};
-    component.user.username = "anja";
-    component.recipe.name = "pancakes";
+  it('should remove saved recipe', fakeAsync(() => {
+    let res = { status: 1, poruka: "" };
     spyOn(service, 'removeSavedRecipe').and.returnValue(of(res));
     component.remove();
-    fixture.detectChanges();
-    expect(component.msg).toBe("removed");
-  });
+    tick();
+    expect(component.saved).toBe(false);
+  }));
 
   it('should set visibility to everyone', () => {
     component.visibility("everyone");
@@ -182,14 +215,12 @@ describe('RecipeComponent', () => {
     expect(component.visible).toBe(2);
   });
 
-  it('should change visibility', () => {
-    let res: keyable = {};
-    component.recipe.name = "pancakes";
+  it('should change visibility', fakeAsync(() => {
+    let res = { status: 1, poruka: "" };
     spyOn(service, 'changeVisiblity').and.returnValue(of(res));
     component.visibility("hide");
-    fixture.detectChanges();
-    expect(component.msg).toBe("visibility change");
-  });
-  
+    tick();
+    expect(component.res).toBe(1);
+  }));
 
 });

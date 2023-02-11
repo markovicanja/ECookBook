@@ -11,7 +11,7 @@ import { keyable, ServiceService } from '../service.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(public service: ServiceService, private router: Router) { }
+  constructor(private service: ServiceService, private router: Router) { }
 
   user: User;
   userRecipes: Recipe[];
@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.msg = "";
     if (localStorage.getItem("user") == null) {
-      this.user = new User;
       return;
     }
     else this.user = JSON.parse(localStorage.getItem("user")!);

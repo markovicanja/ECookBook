@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { User } from '../model/user.model';
 import { keyable, ServiceService } from '../service.service';
 
 import { AddRecipeComponent } from './add-recipe.component';
@@ -20,6 +21,12 @@ describe('AddRecipeComponent', () => {
     })
     .compileComponents();
 
+    let user = new User;
+    user.username = "anja";
+    user.password = "123";
+    user.email = "anja@gmail.com";
+    localStorage.setItem("user", JSON.stringify(user));
+
     fixture = TestBed.createComponent(AddRecipeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -28,6 +35,11 @@ describe('AddRecipeComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should return', () => {
+    localStorage.clear();
+    expect(component.ngOnInit()).toBe(undefined);
   });
 
   it('should return error', () => {

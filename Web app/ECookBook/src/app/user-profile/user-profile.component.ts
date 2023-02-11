@@ -25,13 +25,11 @@ export class UserProfileComponent implements OnInit {
     this.following = false;
 
     if (localStorage.getItem("userProfile") == null || localStorage.getItem("userProfile") == "") {
-      this.user = new User;
       this.router.navigate(["home"]);
     }
     else this.user = JSON.parse(localStorage.getItem("userProfile")!);
 
     if (localStorage.getItem("user") == null || localStorage.getItem("user") == "") {
-      this.loggedUser = new User;
       this.router.navigate(["home"]);
     }
     else this.loggedUser = JSON.parse(localStorage.getItem("user")!);

@@ -4,18 +4,21 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Recipe } from '../model/recipe.model';
 import { User } from '../model/user.model';
+import { ServiceService } from '../service.service';
 
 import { ProfileComponent } from './profile.component';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
+  let service: ServiceService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule
       ],
+      providers: [ ServiceService ],
       declarations: [ ProfileComponent ]
     })
     .compileComponents();
@@ -29,15 +32,21 @@ describe('ProfileComponent', () => {
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    service = TestBed.inject(ServiceService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should return', () => {
+    localStorage.clear();
+    expect(component.ngOnInit()).toBe(undefined);
+  });
+
   it('should return user recipes', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
-    spyOn(component.service, 'getUserRecipes').and.returnValue(of(res));
+    spyOn(service, 'getUserRecipes').and.returnValue(of(res));
     component.ngOnInit();
     tick();
     expect(component.res).toBe(1);
@@ -45,7 +54,7 @@ describe('ProfileComponent', () => {
 
   it('should get user recipes', () => {
     let res = {};
-    spyOn(component.service, 'getUserRecipes').and.returnValue(of(res));
+    spyOn(service, 'getUserRecipes').and.returnValue(of(res));
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.msg).toBe("1");
@@ -53,7 +62,7 @@ describe('ProfileComponent', () => {
 
   it('should get followings', () => {
     let res = {};
-    spyOn(component.service, 'getFollowings').and.returnValue(of(res));
+    spyOn(service, 'getFollowings').and.returnValue(of(res));
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.msg).toBe("2");
@@ -61,7 +70,7 @@ describe('ProfileComponent', () => {
 
   it('should return user followings', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
-    spyOn(component.service, 'getFollowings').and.returnValue(of(res));
+    spyOn(service, 'getFollowings').and.returnValue(of(res));
     component.ngOnInit();
     tick();
     expect(component.res).toBe(1);
@@ -69,7 +78,7 @@ describe('ProfileComponent', () => {
 
   it('should get all saved recipes', () => {
     let res = {};
-    spyOn(component.service, 'getAllSavedRecipes').and.returnValue(of(res));
+    spyOn(service, 'getAllSavedRecipes').and.returnValue(of(res));
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.msg).toBe("3");
@@ -77,7 +86,7 @@ describe('ProfileComponent', () => {
 
   it('should return saved recipes', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
-    spyOn(component.service, 'getAllSavedRecipes').and.returnValue(of(res));
+    spyOn(service, 'getAllSavedRecipes').and.returnValue(of(res));
     component.ngOnInit();
     tick();
     expect(component.res).toBe(1);
@@ -85,7 +94,7 @@ describe('ProfileComponent', () => {
 
   it('should get all recommended recipes', () => {
     let res = {};
-    spyOn(component.service, 'getAllRecommendedRecipes').and.returnValue(of(res));
+    spyOn(service, 'getAllRecommendedRecipes').and.returnValue(of(res));
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.msg).toBe("4");
@@ -93,7 +102,7 @@ describe('ProfileComponent', () => {
 
   it('should return recommended recipes', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
-    spyOn(component.service, 'getAllRecommendedRecipes').and.returnValue(of(res));
+    spyOn(service, 'getAllRecommendedRecipes').and.returnValue(of(res));
     component.ngOnInit();
     tick();
     expect(component.res).toBe(1);
@@ -101,7 +110,7 @@ describe('ProfileComponent', () => {
 
   it('should find user for route', () => {
     let res = {};
-    spyOn(component.service, 'findUser').and.returnValue(of(res));
+    spyOn(service, 'findUser').and.returnValue(of(res));
     component.userRoute("anja");
     fixture.detectChanges();
     expect(component.msg).toBe("userRoute");
@@ -129,5 +138,14 @@ describe('ProfileComponent', () => {
   
     expect(spy.calls.first().args[0]).toContain('recipe');
   }));
+
+  it('should navigate to userProfile', fakeAsync(inject([Router], (mockRouter: Router) => {
+    let res = { status: 1, poruka: "" };
+    spyOn(service, 'findUser').and.returnValue(of(res));
+    const spy = spyOn(mockRouter, 'navigate').and.stub();
+    component.userRoute("ogi");
+    tick();
+    expect(spy.calls.first().args[0]).toContain('userProfile');
+  })));
 
 });

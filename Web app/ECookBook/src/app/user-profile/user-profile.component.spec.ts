@@ -45,6 +45,13 @@ describe('UserProfileComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should navigate to home', inject([Router], (mockRouter: Router) => {
+    localStorage.clear();
+    const spy = spyOn(mockRouter, 'navigate').and.stub();
+    component.ngOnInit();
+    expect(spy.calls.first().args[0]).toContain('home');
+  }));
+
   it('should return user recipes', fakeAsync(() => {
     let res = { status: 1, poruka: "" };
     spyOn(service, 'getUserRecipes').and.returnValue(of(res));

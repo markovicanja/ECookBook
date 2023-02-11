@@ -31,6 +31,12 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should set logged user', () => {
+    localStorage.clear();
+    component.ngOnInit();
+    expect(component.loggedUser).toBe(null);
+  });
+
   it('should reset data', () => {
     component.reset();
     expect(component.username).toBe("");
@@ -67,6 +73,16 @@ describe('HomeComponent', () => {
     expect(component.res).toBe(1);
   }));
 
+  it('should not login', fakeAsync(() => {
+    let res = { status: 0, poruka: "" };
+    component.username = "fakeUser";
+    component.password = "123";
+    spyOn(service, 'loginUser').and.returnValue(of(res));
+    component.login();
+    tick();
+    expect(component.res).toBe(0);
+  }));
+
   it('should be a register error', () => {
     component.username = "";
     component.register();
@@ -92,6 +108,18 @@ describe('HomeComponent', () => {
     component.register();
     tick();
     expect(component.res).toBe(1);
+  }));
+
+  it('should not register', fakeAsync(() => {
+    let res = { status: 0, poruka: "" };
+    component.username = "username";
+    component.email = "email";
+    component.password = "password";
+    component.confPassword = "password";
+    spyOn(service, 'registerUser').and.returnValue(of(res));
+    component.register();
+    tick();
+    expect(component.res).toBe(0);
   }));
 
 });

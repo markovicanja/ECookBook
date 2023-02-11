@@ -39,6 +39,11 @@ describe('RecipesComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should return', () => {
+    localStorage.clear();
+    expect(component.ngOnInit()).toBe(undefined);
+  });
+
   it('should set sorter', () => {
     expect(component.sorter).toBe("Sort");
   });

@@ -60,7 +60,6 @@ export class RecipeComponent implements OnInit {
     this.comments = [];
 
     if (localStorage.getItem("recipe") == null || localStorage.getItem("recipe") == "") {
-      this.recipe = new Recipe;
       this.router.navigate(["home"]);
     }
     else this.recipe = JSON.parse(localStorage.getItem("recipe")!);
@@ -102,7 +101,7 @@ export class RecipeComponent implements OnInit {
       return;
     }
     this.service.findUser(username.toString()).subscribe(res => {
-      this.msg = "success";
+      this.res = res["status"];
       if(res["status"] == 1){
         localStorage.setItem("userProfile", JSON.stringify({'username' : res["username"], 'email' : res["email"]}))
         this.router.navigate(["userProfile"]);
@@ -175,7 +174,7 @@ export class RecipeComponent implements OnInit {
 
   save() {
     this.service.saveRecipe(this.user.username, this.recipe.name).subscribe(res => {
-      this.msg = "saved";
+      this.res = res["status"];
       if(res["status"] == 1){
         this.saved = true;
       }
@@ -184,7 +183,7 @@ export class RecipeComponent implements OnInit {
 
   remove() {    
     this.service.removeSavedRecipe(this.user.username, this.recipe.name).subscribe(res => {
-      this.msg = "removed";
+      this.res = res["status"];
       if(res["status"] == 1){
         this.saved = false;
       }
@@ -202,7 +201,7 @@ export class RecipeComponent implements OnInit {
     }
 
     this.service.changeVisiblity(this.recipe.name, this.visible).subscribe(res => {
-      this.msg = "visibility change";
+      this.res = res["status"];
       if(res["status"] == 1){
         this.recipe.visibility = this.visible;
         this.visibilityMsg = res["poruka"];  
